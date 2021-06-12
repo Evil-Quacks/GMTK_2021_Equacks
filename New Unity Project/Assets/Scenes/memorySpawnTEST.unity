@@ -647,6 +647,10 @@ MonoBehaviour:
   audio_mem: {fileID: 773230312}
   spr_mem: {fileID: 494665441}
   col_mem: {fileID: 1587349661}
+  memoryToSpawn:
+    memorySFX: {fileID: 0}
+    correct: 0
+    attempts: 3
   sfxVolume: 5
   fadeSpeed: 0.01
   timeToHoldInteractToLock: 5
