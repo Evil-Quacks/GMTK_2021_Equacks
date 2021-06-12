@@ -61,6 +61,7 @@ public class GameManager : MonoSingleton<GameManager>
             EventManager.instance.AddListener<EnvioEvents.SpawnerCreated> (OnSpawnFound);
             EventManager.instance.AddListener<PlayerEvents.RespawnPlayer> (OnRespawnPlayer);
             EventManager.instance.AddListener<GameEvents.GameOver>(OnGameOver);
+            EventManager.instance.AddListener<GameEvents.MemorySelected>(OnMemory);
         }
     }
 
@@ -92,4 +93,16 @@ public class GameManager : MonoSingleton<GameManager>
     {
         //do the gameover stuffs like credits
     }
+
+    private void OnMemory(GameEvents.MemorySelected ms)
+    {
+        if(ms.wasPlayerCorrect)
+        {
+            //Yay...confetti....woo...so smart, much wow
+            //Add to player points
+        }
+        
+        // No seriously load the next narrative line & memories or this time
+    }
+
 }

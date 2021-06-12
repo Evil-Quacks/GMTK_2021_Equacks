@@ -16,21 +16,26 @@ public class memoryView : MonoBehaviour
     [SerializeField]
     BoxCollider2D col_mem;
 
-    memory memoryToSpawn;
+    Memory memoryToSpawn;
     AudioClip sfx_mem;
-
     bool fadeSprite;
+    int defaultAttempts;
+    bool playerInRange;
+    float pressStartTime;
+    float timePressed;
 
     //! PUBLIC FOR TESTING ONLY 
     public float sfxVolume;
     public float fadeSpeed;
+    public float timeToHoldInteractToLock;
     //!-------------------------
 
-    public void Initalize(memory memor, AudioClip sfx, float sfxVol, float fadeSpeed)
+    public void Initalize(Memory memor, AudioClip sfx, float sfxVol, float fadeSpeed)
     {
         memoryToSpawn = memor;
         sfx_mem = sfx;
         sfxVolume = sfxVol;
+        defaultAttempts = memor.attempts;
     }
 
     private void FixedUpdate() {
@@ -38,6 +43,46 @@ public class memoryView : MonoBehaviour
         {
             AdjustAlpha();
         }
+        
+        if(playerInRange && Input.GetKeyDown("e"))
+        {
+            pressStartTime = Time.fixedDeltaTime;
+        }
+        else if(Input.GetKeyUp("e") || timePressed > timeToHoldInteractToLock)
+        {
+            //Need this incase the first part of if passes...
+            if(timePressed >= timeToHoldInteractToLock)
+            {
+                SelectThisMemory();
+                pressStartTime = 0;
+                timePressed = 0;
+            }
+        }
+        else if(pressStartTime != 0)
+        {
+            timePressed += Time.deltaTime;
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other) 
+    {
+        if(other.gameObject.tag == "Player")
+        {
+            playerInRange = true;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other) 
+    {
+        if(other.gameObject.tag == "Player")
+        {
+            playerInRange = false;
+        }
+    }
+
+    private void SelectThisMemory()
+    {
+        EventManager.instance.QueueEvent(new GameEvents.MemorySelected(memoryToSpawn.correct));
     }
     private void SpawnMemory(bool toSpawn)
     {
@@ -53,7 +98,8 @@ public class memoryView : MonoBehaviour
 
     private void ResetAttempts()
     {
-        //Set memorytospawn attempts to default attempts
+        memoryToSpawn.attempts = defaultAttempts;
+        spr_mem.color = new Color(spr_mem.color.r, spr_mem.color.g, spr_mem.color.b, 1);
     }
 
     private void PlayNote()
