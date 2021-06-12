@@ -646,10 +646,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audio_mem: {fileID: 773230312}
   spr_mem: {fileID: 494665441}
-  col_mem: {fileID: 0}
+  col_mem: {fileID: 1587349661}
   sfxVolume: 5
   fadeSpeed: 0.01
-  timeToHoldInteractToLock: 300
+  timeToHoldInteractToLock: 5
 --- !u!61 &1587349661
 BoxCollider2D:
   m_ObjectHideFlags: 0

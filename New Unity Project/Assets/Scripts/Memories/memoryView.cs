@@ -16,12 +16,13 @@ public class memoryView : MonoBehaviour
     [SerializeField]
     BoxCollider2D col_mem;
 
+    //! ONLY SERIALIZED FOR TESTING
+    [SerializeField]
     Memory memoryToSpawn;
     AudioClip sfx_mem;
     bool fadeSprite;
     int defaultAttempts;
     bool playerInRange;
-    float pressStartTime;
     float timePressed;
 
     //! PUBLIC FOR TESTING ONLY 
@@ -38,30 +39,38 @@ public class memoryView : MonoBehaviour
         defaultAttempts = memor.attempts;
     }
 
-    private void FixedUpdate() {
+    private void Update() 
+    {
+        if(playerInRange)
+        {
+           if(Input.GetKeyUp("e") || timePressed > timeToHoldInteractToLock)
+            {
+                
+                if(timePressed >= timeToHoldInteractToLock)
+                {
+                    SelectThisMemory();
+                }
+                else
+                {
+                    PlayNote();
+                    RemoveOneAttempt();
+                }
+                ResetPressTime();
+            }
+            else if(Input.GetKey("e"))
+            {
+                timePressed += Time.deltaTime;
+            }
+        }
+        
+    }
+    private void FixedUpdate() 
+    {
         if(fadeSprite)
         {
             AdjustAlpha();
         }
         
-        if(playerInRange && Input.GetKeyDown("e"))
-        {
-            pressStartTime = Time.fixedDeltaTime;
-        }
-        else if(Input.GetKeyUp("e") || timePressed > timeToHoldInteractToLock)
-        {
-            //Need this incase the first part of if passes...
-            if(timePressed >= timeToHoldInteractToLock)
-            {
-                SelectThisMemory();
-                pressStartTime = 0;
-                timePressed = 0;
-            }
-        }
-        else if(pressStartTime != 0)
-        {
-            timePressed += Time.deltaTime;
-        }
     }
 
     private void OnTriggerEnter2D(Collider2D other) 
@@ -77,12 +86,18 @@ public class memoryView : MonoBehaviour
         if(other.gameObject.tag == "Player")
         {
             playerInRange = false;
+            ResetPressTime();
         }
     }
 
+    private void ResetPressTime()
+    {
+        timePressed = 0;
+    }
     private void SelectThisMemory()
     {
-        EventManager.instance.QueueEvent(new GameEvents.MemorySelected(memoryToSpawn.correct));
+        Debug.Log("SELECT THIS ONE");
+        //EventManager.instance.QueueEvent(new GameEvents.MemorySelected(memoryToSpawn.correct));
     }
     private void SpawnMemory(bool toSpawn)
     {
@@ -104,10 +119,11 @@ public class memoryView : MonoBehaviour
 
     private void PlayNote()
     {
+        Debug.Log("PLAY NOTE :D");
         //Play the audio file from the audio source.
         if(!audio_mem.isPlaying)
         {
-            audio_mem.PlayOneShot(sfx_mem, sfxVolume);
+           // audio_mem.PlayOneShot(sfx_mem, sfxVolume);
         }
     }
 
