@@ -130,22 +130,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: -4332775127973680775, guid: 87749bdd0fb510547a9aa9f1e2316da0, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6378536412066522962, guid: 87749bdd0fb510547a9aa9f1e2316da0, type: 3}
-      propertyPath: m_Radius
-      value: 1.4147263
-      objectReference: {fileID: 0}
-    - target: {fileID: 6378536412066522962, guid: 87749bdd0fb510547a9aa9f1e2316da0, type: 3}
-      propertyPath: m_Offset.x
-      value: -0.100000024
-      objectReference: {fileID: 0}
-    - target: {fileID: 6378536412066522962, guid: 87749bdd0fb510547a9aa9f1e2316da0, type: 3}
-      propertyPath: m_Offset.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6378536412066522967, guid: 87749bdd0fb510547a9aa9f1e2316da0, type: 3}
       propertyPath: m_RootOrder
       value: 3
