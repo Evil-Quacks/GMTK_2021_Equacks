@@ -6,6 +6,7 @@ using UnityEngine;
 [RequireComponent (typeof (AnimatorController))]
 public class PlayerView : MonoBehaviour
 {
+    [SerializeField]
     Rigidbody2D playerRB;
 
     Dictionary<string, GameObject> playerStateColliders = new Dictionary<string, GameObject> ();
@@ -14,7 +15,7 @@ public class PlayerView : MonoBehaviour
 
     bool canMove = true;
 
-    bool isJumping = true;
+    bool isNOTJumping = true;
 
     Collider2D currentObstacle;
 
@@ -24,17 +25,23 @@ public class PlayerView : MonoBehaviour
 
     float inAirForce;
 
-    PState pendingState;
+    // PState pendingState;
 
     // The state the player is shifting to next
-    PStateCollider pendingStateCollider;
+    // PStateCollider pendingStateCollider;
     // The player's previous state.  Also technically counts as their current state until right before the switch
-    PStateCollider previousStateCollider = PStateCollider.SquareCollider;
+    // PStateCollider previousStateCollider = PStateCollider.SquareCollider;
 
     private void Start ()
     {
         Debug.Log ("PV ==> Created");
+
         EventManager.instance.AddListener<PlayerEvents.RespawnPlayer> (OnRespawnPlayer);
+    }
+
+    private void Awake ()
+    {
+        playerRB = GetComponent<Rigidbody2D> ();
     }
 
     private void FixedUpdate ()
@@ -42,61 +49,61 @@ public class PlayerView : MonoBehaviour
         //Check if falling
         if (!Physics2D.Raycast (this.transform.position, Vector2.down, 1f))
         {
-            isJumping = true;
+            isNOTJumping = true;
             Debug.Log ("FALLING");
         }
 
         if (canMove)
         {
             Vector2 direction = Vector2.zero;
-            if ((Input.GetKey ("right") || Input.GetKey ("d")) && (!IsState (PStateCollider.SquareCollider) && !IsState (PStateCollider.KeyCollider)))
+            if ((Input.GetKey ("right") || Input.GetKey ("d")))
             {
                 // To the right...
                 direction = Vector2.right;
             }
-            else if ((Input.GetKey ("left") || Input.GetKey ("a")) && (!IsState (PStateCollider.SquareCollider) && !IsState (PStateCollider.KeyCollider)))
+            else if ((Input.GetKey ("left") || Input.GetKey ("a")))
             {
                 // To the left ...
                 direction = Vector2.left;
             }
-            else if (Input.GetKey ("space") && IsState (PStateCollider.SquareCollider) && !isJumping)
+            else if (Input.GetKey ("space") && !isNOTJumping)
             {
                 // One hop this time...
                 direction = Vector2.up;
-                isJumping = true;
+                isNOTJumping = false;
             }
             else if (Input.GetKey ("down") || Input.GetKey ("s"))
             {
                 // how low can you go?
             }
-            else if (Input.GetKey ("1"))
-            {
-                canMove = false;
-                playerRB.Sleep ();
-                EventManager.instance.QueueEvent (new PlayerEvents.ShapeShift (PState.SQUARE));
-                return;
-            }
-            else if (Input.GetKey ("2"))
-            {
-                canMove = false;
-                playerRB.Sleep ();
-                EventManager.instance.QueueEvent (new PlayerEvents.ShapeShift (PState.CIRCLE));
-                return;
-            }
-            else if (Input.GetKey ("3"))
-            {
-                canMove = false;
-                playerRB.Sleep ();
-                EventManager.instance.QueueEvent (new PlayerEvents.ShapeShift (PState.PARASOL));
-                return;
-            }
-            else if (Input.GetKey ("4"))
-            {
-                canMove = false;
-                playerRB.Sleep ();
-                EventManager.instance.QueueEvent (new PlayerEvents.ShapeShift (PState.TRIANGLE));
-                return;
-            }
+            // else if (Input.GetKey ("1"))
+            // {
+            //     canMove = false;
+            //     playerRB.Sleep ();
+            //     EventManager.instance.QueueEvent (new PlayerEvents.ShapeShift (PState.SQUARE));
+            //     return;
+            // }
+            // else if (Input.GetKey ("2"))
+            // {
+            //     canMove = false;
+            //     playerRB.Sleep ();
+            //     EventManager.instance.QueueEvent (new PlayerEvents.ShapeShift (PState.CIRCLE));
+            //     return;
+            // }
+            // else if (Input.GetKey ("3"))
+            // {
+            //     canMove = false;
+            //     playerRB.Sleep ();
+            //     EventManager.instance.QueueEvent (new PlayerEvents.ShapeShift (PState.PARASOL));
+            //     return;
+            // }
+            // else if (Input.GetKey ("4"))
+            // {
+            //     canMove = false;
+            //     playerRB.Sleep ();
+            //     EventManager.instance.QueueEvent (new PlayerEvents.ShapeShift (PState.TRIANGLE));
+            //     return;
+            // }
 
             if (direction != Vector2.zero)
                 UpdateMovement (direction, Time.fixedDeltaTime);
@@ -106,21 +113,22 @@ public class PlayerView : MonoBehaviour
     private void UpdateMovement (Vector2 direction, float delta)
     {
         Vector2 currentPosition = new Vector2 (this.transform.position.x, this.transform.position.y);
-        if (!isJumping)
+
+        if (isNOTJumping)
         {
-            if (IsState (PStateCollider.CircleCollider))
-                playerRB.MovePosition (currentPosition + direction * moveForce * delta);
+            //     if (IsState (PStateCollider.CircleCollider))
+            playerRB.MovePosition (currentPosition + direction * moveForce * delta);
         }
         else
         {
             if (direction != Vector2.up)
             {
-                //Glide if we're a parasol ~
-                if (IsState (PStateCollider.ParasolCollider))
-                {
-                    playerRB.MovePosition (currentPosition + direction * moveForce * delta);
-                    return;
-                }
+                // //Glide if we're a parasol ~
+                // if (IsState (PStateCollider.ParasolCollider))
+                // {
+                //     playerRB.MovePosition (currentPosition + direction * moveForce * delta);
+                //     return;
+                // }
 
                 //Obey gravity if we're not >.<
                 playerRB.AddForce (direction * inAirForce);
@@ -128,10 +136,9 @@ public class PlayerView : MonoBehaviour
             else
             {
                 //We're jumping upwards if we're a square :D
-                if (IsState (PStateCollider.SquareCollider))
-                    playerRB.AddForce (direction * jumpForce);
+                // if (IsState (PStateCollider.SquareCollider))
+                playerRB.AddForce (direction * jumpForce);
             }
-
         }
     }
 
@@ -141,48 +148,47 @@ public class PlayerView : MonoBehaviour
         moveForce = playerMoveSpeed;
         inAirForce = playerAirForce;
 
-        playerRB = GetComponent<Rigidbody2D> ();
         playerAnimCtrl = GetComponent<Animator> ();
         // Ensure starting collider matches starting state and all colliders are referenced
-        for (int i = 0; i < gameObject.transform.childCount; i++)
-        {
-            GameObject temp = gameObject.transform.GetChild (i).gameObject;
-            playerStateColliders[temp.name.ToLower ()] = temp;
-        }
-        previousStateCollider = startingStateCollider;
-        pendingStateCollider = startingStateCollider;
-        ShapeShift (startingState, startingStateCollider);
+        // for (int i = 0; i < gameObject.transform.childCount; i++)
+        // {
+        //     GameObject temp = gameObject.transform.GetChild (i).gameObject;
+        //     playerStateColliders[temp.name.ToLower ()] = temp;
+        // }
+        // previousStateCollider = startingStateCollider;
+        // pendingStateCollider = startingStateCollider;
+        // ShapeShift (startingState, startingStateCollider);
     }
 
-    public void ShapeShift (PState newState, PStateCollider newStateCollider)
-    {
-        playerRB.velocity = Vector2.zero;
-        pendingState = newState;
-        pendingStateCollider = newStateCollider;
+    // public void ShapeShift (PState newState, PStateCollider newStateCollider)
+    // {
+    //     playerRB.velocity = Vector2.zero;
+    //     pendingState = newState;
+    //     pendingStateCollider = newStateCollider;
 
-        Debug.LogFormat ("PLAY STATE -> {0}", newState);
-        //Reset Rotation
-        gameObject.transform.rotation = new Quaternion (0, 0, 0, 0);
-        //Allow RB motion as circle
-        playerRB.freezeRotation = newState.ToString ().ToLower ().Equals ("circle") ? false : true;
+    //     Debug.LogFormat ("PLAY STATE -> {0}", newState);
+    //     //Reset Rotation
+    //     gameObject.transform.rotation = new Quaternion (0, 0, 0, 0);
+    //     //Allow RB motion as circle
+    //     playerRB.freezeRotation = newState.ToString ().ToLower ().Equals ("circle") ? false : true;
 
-        playerAnimCtrl.Play ("TRANSFORM");
-    }
+    //     playerAnimCtrl.Play ("TRANSFORM");
+    // }
 
-    public void EXT_OnTransformEnd ()
-    {
-        if (previousStateCollider != pendingStateCollider)
-        {
-            playerStateColliders[pendingStateCollider.ToString ().ToLower ()].SetActive (true);
-            playerStateColliders[previousStateCollider.ToString ().ToLower ()].SetActive (false);
-        }
-        previousStateCollider = pendingStateCollider;
-        playerAnimCtrl.Play (pendingState.ToString ());
-        canMove = true;
+    // public void EXT_OnTransformEnd ()
+    // {
+    //     if (previousStateCollider != pendingStateCollider)
+    //     {
+    //         playerStateColliders[pendingStateCollider.ToString ().ToLower ()].SetActive (true);
+    //         playerStateColliders[previousStateCollider.ToString ().ToLower ()].SetActive (false);
+    //     }
+    //     previousStateCollider = pendingStateCollider;
+    //     playerAnimCtrl.Play (pendingState.ToString ());
+    //     canMove = true;
 
-        playerRB.WakeUp ();
-        //UpdateMovement(new Vector2(velocityBeforeTransition, 0), Time.fixedDeltaTime);
-    }
+    //     playerRB.WakeUp ();
+    //     //UpdateMovement(new Vector2(velocityBeforeTransition, 0), Time.fixedDeltaTime);
+    // }
 
     private void OnCollisionEnter2D (Collision2D other)
     {
@@ -198,7 +204,7 @@ public class PlayerView : MonoBehaviour
             }
             else if (other.gameObject.tag == "GRND")
             {
-                isJumping = false;
+                isNOTJumping = true;
                 playerRB.velocity = Vector2.zero;
                 //Raycast out
                 if (ReturnDirection (this.gameObject, other.gameObject) != HitDirection.Bottom)
@@ -261,17 +267,17 @@ public class PlayerView : MonoBehaviour
         Debug.Log ("Sorry, but that's not a key to this door");
     }
 
-    /// <summary>
-    /// Compares current collider state to the parameter's state
-    /// </summary>
-    /// <param name="stateForCheck"></param>
-    /// <returns>true if they match, else false</returns>
-    private bool IsState (PStateCollider stateForCheck)
-    {
-        return (previousStateCollider == stateForCheck);
-    }
+    // /// <summary>
+    // /// Compares current collider state to the parameter's state
+    // /// </summary>
+    // /// <param name="stateForCheck"></param>
+    // /// <returns>true if they match, else false</returns>
+    // private bool IsState (PStateCollider stateForCheck)
+    // {
+    //     return (previousStateCollider == stateForCheck);
+    // }
 
-    // TOOK THIS CODE FROM UNITY FORUMS - NEEDS REVIEWD AND POSSIBLY REVISED
+    // TOOK THIS CODE FROM UNITY FORUMS - NEEDS REVIEWED AND POSSIBLY REVISED
     private enum HitDirection { None, Top, Bottom, Forward, Back, Left, Right }
     private HitDirection ReturnDirection (GameObject player, GameObject objCollision)
     {

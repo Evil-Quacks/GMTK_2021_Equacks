@@ -14,8 +14,8 @@ public class PlayerController
         playerModel = model;
 
         Subscribe ();
-        InitializePlayer (spawner);
         Debug.Log (" PC ==> CREATED");
+        InitializePlayer (spawner);
     }
 
     void Subscribe ()
@@ -23,7 +23,7 @@ public class PlayerController
         if (EventManager.instance != null)
         {
             EventManager.instance.AddListener<PlayerEvents.ObsCollision> (OnCollisionWithObstacle);
-            EventManager.instance.AddListener<PlayerEvents.ShapeShift> (OnShapeShift);
+            // EventManager.instance.AddListener<PlayerEvents.ShapeShift> (OnShapeShift);
         }
     }
 
@@ -33,20 +33,20 @@ public class PlayerController
         {
             //Found Spawn
             currentPlayer = GameObject.Instantiate (playerPrefab, playerSpawn, true);
-            EventManager.instance.QueueEvent (new PlayerEvents.SendTransform (currentPlayer.transform));
+            // EventManager.instance.QueueEvent (new PlayerEvents.SendTransform (currentPlayer.transform));
             currentPlayer.Initialize (playerModel.currentState, playerModel.currentStateCollider, playerModel.jumpSpeed, playerModel.moveSpeed, playerModel.airSpeed);
         }
     }
 
-    void OnShapeShift (PlayerEvents.ShapeShift @event)
-    {
-        int shape = (int) @event.setState;
-        PStateCollider newStateCollider = (PStateCollider) shape;
+    // void OnShapeShift (PlayerEvents.ShapeShift @event)
+    // {
+    //     int shape = (int) @event.setState;
+    //     PStateCollider newStateCollider = (PStateCollider) shape;
 
-        playerModel.currentState = @event.setState;
-        playerModel.currentStateCollider = newStateCollider;
-        currentPlayer.ShapeShift (@event.setState, newStateCollider);
-    }
+    //     playerModel.currentState = @event.setState;
+    //     playerModel.currentStateCollider = newStateCollider;
+    //     currentPlayer.ShapeShift (@event.setState, newStateCollider);
+    // }
 
     void OnCollisionWithObstacle (PlayerEvents.ObsCollision @event)
     {

@@ -28,7 +28,7 @@ public class GameManager : MonoSingleton<GameManager>
     float musicVolume = .5f;
 
     [SerializeField]
-    AudioClip musicClip;
+    // AudioClip musicClip;
 
     Vector2 initialSpawnLocation;
     #endregion
@@ -45,15 +45,16 @@ public class GameManager : MonoSingleton<GameManager>
 
     IEnumerator LoadAsyncFirstScene ()
     {
-#if DEBUG
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync ("Joe's Dev Test", LoadSceneMode.Additive);
-#else
+#if !DEBUG
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync ("LEVEL-1", LoadSceneMode.Additive);
-#endif
+
         while (!asyncLoad.isDone)
         {
             yield return null;
         }
+#else
+        yield return null;
+#endif
     }
 
     void Subscribe ()
@@ -74,10 +75,10 @@ public class GameManager : MonoSingleton<GameManager>
     {
         PlayerController pCtrl = new PlayerController (playerPrefab, playerInfo, @event.spawnerLoc);
         initialSpawnLocation = @event.spawnerLoc.position;
-        AudioSource audioSrc = gameObject.AddComponent<AudioSource> ();
-        audioSrc.volume = musicVolume;
-        audioSrc.clip = musicClip;
-        audioSrc.Play ();
+        // AudioSource audioSrc = gameObject.AddComponent<AudioSource> ();
+        // audioSrc.volume = musicVolume;
+        // audioSrc.clip = musicClip;
+        // audioSrc.Play ();
     }
 
     private void OnRespawnPlayer (PlayerEvents.RespawnPlayer @event)
@@ -85,7 +86,7 @@ public class GameManager : MonoSingleton<GameManager>
         Transform playerTransform = @event.playerTransform;
 
         playerTransform.position = initialSpawnLocation;
-        EventManager.instance.QueueEvent (new PlayerEvents.ShapeShift (PState.SQUARE));
+        // EventManager.instance.QueueEvent (new PlayerEvents.ShapeShift (PState.SQUARE));
     }
 
     #endregion
