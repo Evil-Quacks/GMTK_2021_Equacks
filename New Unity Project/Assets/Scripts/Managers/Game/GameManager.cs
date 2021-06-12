@@ -40,7 +40,7 @@ public class GameManager : MonoSingleton<GameManager>
         Subscribe ();
         //Load Scene
         StartCoroutine (LoadAsyncFirstScene ());
-        follower.offSet = cameraFollowOffset;
+        // follower.offSet = cameraFollowOffset;
     }
 
     IEnumerator LoadAsyncFirstScene ()
