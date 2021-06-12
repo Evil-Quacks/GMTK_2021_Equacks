@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿#define DEBUG
+
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -43,7 +45,11 @@ public class GameManager : MonoSingleton<GameManager>
 
     IEnumerator LoadAsyncFirstScene ()
     {
+#if DEBUG
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync ("Joe's Dev Test", LoadSceneMode.Additive);
+#else
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync ("LEVEL-1", LoadSceneMode.Additive);
+#endif
         while (!asyncLoad.isDone)
         {
             yield return null;
