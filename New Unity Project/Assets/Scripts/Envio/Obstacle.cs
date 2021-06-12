@@ -2,5 +2,6 @@
 
 public class Obstacle : MonoBehaviour
 {
-    public PState requiredState;
+    public bool isInteractable;
+    public bool isWinObj;
 }

@@ -3,10 +3,6 @@
 [Serializable]
 public class PlayerStats
 {
-    public PState currentState;
-
-    public PStateCollider currentStateCollider;
-
     public int totalHealth;
 
     public int currentHealth;
@@ -17,9 +13,8 @@ public class PlayerStats
 
     public float airSpeed;
 
-    PlayerStats (PState startingState, int _totalHealth, int _currentHealth, float _moveSpeed, float _jumpSpeed, float _airSpeed)
+    PlayerStats(int _totalHealth, int _currentHealth, float _moveSpeed, float _jumpSpeed, float _airSpeed)
     {
-        currentState = startingState;
         totalHealth = _totalHealth;
         currentHealth = _currentHealth;
         moveSpeed = _moveSpeed;
@@ -27,7 +22,7 @@ public class PlayerStats
         airSpeed = _airSpeed;
     }
 
-    public bool IsDead ()
+    public bool IsDead()
     {
         if (currentHealth <= 0)
         {
@@ -36,25 +31,9 @@ public class PlayerStats
         return false;
     }
 
-    public void ResetHealth ()
+    public void ResetHealth()
     {
         currentHealth = totalHealth;
     }
 
-}
-
-public enum PState
-{
-    SQUARE,
-    CIRCLE,
-    TRIANGLE,
-    PARASOL
-}
-
-public enum PStateCollider
-{
-    SquareCollider,
-    CircleCollider,
-    KeyCollider,
-    ParasolCollider
 }

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[RequireComponent (typeof (Camera))]
+[RequireComponent(typeof(Camera))]
 public class CameraFollowPlayer : MonoBehaviour
 {
     [HideInInspector]
@@ -9,11 +9,11 @@ public class CameraFollowPlayer : MonoBehaviour
     [HideInInspector]
     public Vector2 offSet;
 
-    private void Awake ()
+    private void Awake()
     {
         if (EventManager.instance)
         {
-            EventManager.instance.AddListener<PlayerEvents.SendTransform> ((e) =>
+            EventManager.instance.AddListener<PlayerEvents.SendTransform>((e) =>
             {
                 playerTransform = e.playerTransform;
             });
@@ -21,14 +21,13 @@ public class CameraFollowPlayer : MonoBehaviour
     }
 
     // Update is called once per frame
-    void LateUpdate ()
+    void LateUpdate()
     {
         if (playerTransform != null)
         {
             if (playerTransform.position.y <= -6)
             {
-                EventManager.instance.QueueEvent (new PlayerEvents.RespawnPlayer (playerTransform));
-
+                EventManager.instance.QueueEvent(new PlayerEvents.RespawnPlayer(playerTransform));
             }
             else
             {

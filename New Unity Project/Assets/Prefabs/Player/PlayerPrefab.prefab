@@ -12,11 +12,11 @@ GameObject:
   - component: {fileID: 6378536412066522966}
   - component: {fileID: 6378536412066522960}
   - component: {fileID: 6378536412066522963}
-  - component: {fileID: 6378536412066522962}
+  - component: {fileID: 5183837438848560814}
   - component: {fileID: -4332775127973680775}
   m_Layer: 0
   m_Name: PlayerPrefab
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -127,8 +127,8 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!58 &6378536412066522962
-CircleCollider2D:
+--- !u!70 &5183837438848560814
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -140,9 +140,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.1, y: 0.1}
-  serializedVersion: 2
-  m_Radius: 0.6
+  m_Offset: {x: -0.04380107, y: -0.15131289}
+  m_Size: {x: 1.6241589, y: 1.7276889}
+  m_Direction: 0
 --- !u!114 &-4332775127973680775
 MonoBehaviour:
   m_ObjectHideFlags: 0

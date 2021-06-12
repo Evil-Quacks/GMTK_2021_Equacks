@@ -3,15 +3,6 @@ using UnityEngine;
 
 namespace PlayerEvents
 {
-    public struct ShapeShift : iEvent
-    {
-        public readonly PState setState;
-
-        public ShapeShift (PState stateToSet)
-        {
-            setState = stateToSet;
-        }
-    }
 
     public struct ObsCollision : iEvent
     {
@@ -19,7 +10,7 @@ namespace PlayerEvents
 
         public readonly Action<bool> isCorrectState;
 
-        public ObsCollision (GameObject _obstacle, Action<bool> stateCheckCallback)
+        public ObsCollision(GameObject _obstacle, Action<bool> stateCheckCallback)
         {
             obstacle = _obstacle;
             isCorrectState = stateCheckCallback;
@@ -30,7 +21,7 @@ namespace PlayerEvents
     {
         public readonly Transform playerTransform;
 
-        public SendTransform (Transform pTransform)
+        public SendTransform(Transform pTransform)
         {
             playerTransform = pTransform;
         }
@@ -40,7 +31,7 @@ namespace PlayerEvents
     {
         public Transform playerTransform;
 
-        public RespawnPlayer (Transform referenceToPlayerTransform)
+        public RespawnPlayer(Transform referenceToPlayerTransform)
         {
             playerTransform = referenceToPlayerTransform;
         }
