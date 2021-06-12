@@ -15,4 +15,26 @@ namespace GameEvents
             wasPlayerCorrect = pStatus;
         }
     }
+
+    public struct SetCurrentMessage:iEvent
+    {
+        public readonly string messageToDisplay;
+
+        public SetCurrentMessage( string msgToDis)
+        {
+            messageToDisplay = msgToDis;
+        }
+    }
+
+    public struct FadeUI : iEvent
+    {
+        public readonly bool fadingIn;
+        public readonly fadeUIType;
+
+        public FadeUI(bool fadeIn)
+        {
+            fadingIn = fadeIn;
+        }
+    };
+
 }
