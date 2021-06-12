@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System;
+﻿using System;
 
 [Serializable]
 public class PlayerStats
@@ -20,7 +17,7 @@ public class PlayerStats
 
     public float airSpeed;
 
-    PlayerStats(PState startingState, int _totalHealth, int _currentHealth, float _moveSpeed, float _jumpSpeed, float _airSpeed)
+    PlayerStats (PState startingState, int _totalHealth, int _currentHealth, float _moveSpeed, float _jumpSpeed, float _airSpeed)
     {
         currentState = startingState;
         totalHealth = _totalHealth;
@@ -30,16 +27,16 @@ public class PlayerStats
         airSpeed = _airSpeed;
     }
 
-    public bool IsDead()
+    public bool IsDead ()
     {
-        if(currentHealth <= 0)
+        if (currentHealth <= 0)
         {
             return true;
         }
         return false;
     }
 
-    public void ResetHealth()
+    public void ResetHealth ()
     {
         currentHealth = totalHealth;
     }
