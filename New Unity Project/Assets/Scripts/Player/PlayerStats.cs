@@ -7,19 +7,22 @@ public class PlayerStats
 
     public int currentHealth;
 
-    public float moveSpeed;
+    public float moveForce;
 
-    public float jumpSpeed;
+    public float maxMoveVelocity;
 
-    public float airSpeed;
+    public float jumpImpulseForce;
 
-    PlayerStats(int _totalHealth, int _currentHealth, float _moveSpeed, float _jumpSpeed, float _airSpeed)
+    public float airForce;
+
+    PlayerStats(int _totalHealth, int _currentHealth, float _moveForce, float _maxMoveVelocity, float _jumpImpulseForce, float _airForce)
     {
         totalHealth = _totalHealth;
         currentHealth = _currentHealth;
-        moveSpeed = _moveSpeed;
-        jumpSpeed = _jumpSpeed;
-        airSpeed = _airSpeed;
+        moveForce = _moveForce;
+        maxMoveVelocity = _maxMoveVelocity;
+        jumpImpulseForce = _jumpImpulseForce;
+        airForce = _airForce;
     }
 
     public bool IsDead()

@@ -9,7 +9,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     [Header("Player Information")]
     [SerializeField]
-    PlayerStats playerInfo;
+    PlayerStats playerStats;
 
     [SerializeField]
     PlayerView playerPrefab;
@@ -74,7 +74,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void OnSpawnFound(EnvioEvents.SpawnerCreated @event)
     {
-        PlayerController pCtrl = new PlayerController(playerPrefab, playerInfo, @event.spawnerLoc);
+        PlayerController pCtrl = new PlayerController(playerPrefab, playerStats, @event.spawnerLoc);
         initialSpawnLocation = @event.spawnerLoc.position;
         // AudioSource audioSrc = gameObject.AddComponent<AudioSource> ();
         // audioSrc.volume = musicVolume;
