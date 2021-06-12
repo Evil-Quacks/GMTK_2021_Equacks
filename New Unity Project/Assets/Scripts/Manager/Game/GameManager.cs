@@ -60,6 +60,7 @@ public class GameManager : MonoSingleton<GameManager>
             //Subscribe to player / game events
             EventManager.instance.AddListener<EnvioEvents.SpawnerCreated> (OnSpawnFound);
             EventManager.instance.AddListener<PlayerEvents.RespawnPlayer> (OnRespawnPlayer);
+            EventManager.instance.AddListener<GameEvents.GameOver>(OnGameOver);
         }
     }
 
@@ -86,4 +87,9 @@ public class GameManager : MonoSingleton<GameManager>
     }
 
     #endregion
+
+    private void OnGameOver(GameEvents.GameOver ev)
+    {
+        //do the gameover stuffs like credits
+    }
 }
