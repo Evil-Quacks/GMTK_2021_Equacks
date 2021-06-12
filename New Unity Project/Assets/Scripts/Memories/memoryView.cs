@@ -41,7 +41,7 @@ public class memoryView : MonoBehaviour
 
     private void Update() 
     {
-        if(playerInRange)
+        if(playerInRange && !memoryToSpawn.levelOne)
         {
            if(Input.GetKeyUp("e") || timePressed > timeToHoldInteractToLock)
             {
@@ -60,6 +60,14 @@ public class memoryView : MonoBehaviour
             else if(Input.GetKey("e"))
             {
                 timePressed += Time.deltaTime;
+            }
+        }
+        else if(memoryToSpawn.levelOne)
+        {
+            //This is the memory they are trying to match to - just play it if they press
+            if(Input.GetKeyDown("f"))
+            {
+                PlayNote();
             }
         }
         
