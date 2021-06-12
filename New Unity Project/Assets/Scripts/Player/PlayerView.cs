@@ -35,7 +35,6 @@ public class PlayerView : MonoBehaviour
     private void Start ()
     {
         Debug.Log ("PV ==> Created");
-
         EventManager.instance.AddListener<PlayerEvents.RespawnPlayer> (OnRespawnPlayer);
     }
 
@@ -236,6 +235,7 @@ public class PlayerView : MonoBehaviour
     {
         playerRB.velocity = Vector2.zero;
     }
+
     private void AllowMoveThrough (bool canPass)
     {
         if (canPass)

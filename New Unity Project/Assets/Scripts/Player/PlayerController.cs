@@ -32,8 +32,8 @@ public class PlayerController
         if (playerSpawn != null && currentPlayer == null)
         {
             //Found Spawn
-            currentPlayer = GameObject.Instantiate (playerPrefab, playerSpawn, true);
-            // EventManager.instance.QueueEvent (new PlayerEvents.SendTransform (currentPlayer.transform));
+            currentPlayer = GameObject.Instantiate (playerPrefab, playerSpawn.position, Quaternion.identity.normalized); //, true);
+            EventManager.instance.QueueEvent (new PlayerEvents.SendTransform (currentPlayer.transform));
             currentPlayer.Initialize (playerModel.currentState, playerModel.currentStateCollider, playerModel.jumpSpeed, playerModel.moveSpeed, playerModel.airSpeed);
         }
     }

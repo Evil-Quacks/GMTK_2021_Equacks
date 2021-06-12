@@ -11,6 +11,7 @@ public class CameraFollowPlayer : MonoBehaviour
 
     private void Awake ()
     {
+        Debug.Log ("CFP ==> AWAKE");
         if (EventManager.instance)
         {
             EventManager.instance.AddListener<PlayerEvents.SendTransform> ((e) =>
@@ -28,7 +29,6 @@ public class CameraFollowPlayer : MonoBehaviour
             if (playerTransform.position.y <= -6)
             {
                 EventManager.instance.QueueEvent (new PlayerEvents.RespawnPlayer (playerTransform));
-
             }
             else
             {
