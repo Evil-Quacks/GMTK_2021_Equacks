@@ -38,6 +38,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         //Subscribe
         Subscribe ();
+        Debug.Log ("GM ==> CREATED");
         //Load Scene
         StartCoroutine (LoadAsyncFirstScene ());
         // follower.offSet = cameraFollowOffset;
@@ -72,7 +73,6 @@ public class GameManager : MonoSingleton<GameManager>
     #endregion
 
     #region Ready Scene Change
-
     private void OnSpawnFound (EnvioEvents.SpawnerCreated @event)
     {
         PlayerController pCtrl = new PlayerController (playerPrefab, playerInfo, @event.spawnerLoc);
