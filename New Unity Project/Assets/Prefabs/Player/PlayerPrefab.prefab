@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6378536412066522963}
   - component: {fileID: 6378536412066522962}
   - component: {fileID: -4332775127973680775}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: PlayerPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -150,7 +150,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6378536412066522973}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 793242b734a914b4bbd44fc4ab63c8d3, type: 3}
   m_Name: 
@@ -166,6 +166,10 @@ PrefabInstance:
     - target: {fileID: 1527613265006854346, guid: efbaa000c1234d0409f25479379a3a01, type: 3}
       propertyPath: m_Name
       value: Fire
+      objectReference: {fileID: 0}
+    - target: {fileID: 1527613265006854346, guid: efbaa000c1234d0409f25479379a3a01, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2548331347337383551, guid: efbaa000c1234d0409f25479379a3a01, type: 3}
       propertyPath: m_RootOrder
@@ -259,6 +263,10 @@ PrefabInstance:
       propertyPath: InitialModule.startSize.minScalar
       value: 2.4
       objectReference: {fileID: 0}
+    - target: {fileID: 4747407691704323345, guid: efbaa000c1234d0409f25479379a3a01, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4747407691704323372, guid: efbaa000c1234d0409f25479379a3a01, type: 3}
       propertyPath: ShapeModule.m_Rotation.x
       value: 180
@@ -282,6 +290,14 @@ PrefabInstance:
     - target: {fileID: 4747407693332895809, guid: efbaa000c1234d0409f25479379a3a01, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4747407693332895814, guid: efbaa000c1234d0409f25479379a3a01, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4747407693527885432, guid: efbaa000c1234d0409f25479379a3a01, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4747407693527885435, guid: efbaa000c1234d0409f25479379a3a01, type: 3}
       propertyPath: ShapeModule.m_Rotation.x

@@ -100,13 +100,13 @@ public class PlayerView : MonoBehaviour
         {
             // If we're not yet at max speed, keep accellerating. Otherwise, keep the velocity as-is
             if (Mathf.Abs(playerVelocity.x) < maxMoveVelocity)
-                playerRB.AddForce(direction * moveForce);
+                playerRB.AddForce(new Vector2(direction.x * moveForce, direction.y));
             else
                 playerRB.AddForce(direction);
         }
         else
         {
-            if (direction.y != Vector2.up.y)
+            if (direction.y != Vector2.up.y || playerVelocity.normalized.y == Vector2.down.y)
             {
                 // Obey gravity if we're not >.<
                 playerRB.AddForce(new Vector2(direction.x, direction.y * inAirForce));
