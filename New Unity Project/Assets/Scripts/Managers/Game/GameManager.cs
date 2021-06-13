@@ -32,7 +32,7 @@ public class GameManager : MonoSingleton<GameManager>
     float musicVolume = .5f;
 
     [SerializeField]
-    // AudioClip musicClip;
+    AudioSource BGMSpeaker;
 
     Vector2 initialSpawnLocation;
 
@@ -43,7 +43,12 @@ public class GameManager : MonoSingleton<GameManager>
     [SerializeField]
     List<Narrative> narrativeBits;
 
+    [SerializeField]
+    List<AudioClip> bgmLibrary;
+
     int narrativeIndex = 0;
+
+    bool musicFade = false;
     
     #endregion
 
@@ -56,6 +61,23 @@ public class GameManager : MonoSingleton<GameManager>
         EvilSceneManager.instance.WakeUp();
     }
 
+    private void FixedUpdate() {
+        if(musicFade)
+        {
+            if(BGMSpeaker.volume < 1)
+            {
+                //Fade In
+                BGMSpeaker.volume += .25f;
+                if(BGMSpeaker.volume >= 1) musicFade = false;
+            }
+            else
+            {
+                //Fade Out
+                BGMSpeaker.volume =+ .25f;
+                if(BGMSpeaker.volume <= 0) musicFade = false;
+            }
+        }
+    }
 
     void Subscribe()
     {
@@ -82,6 +104,10 @@ public class GameManager : MonoSingleton<GameManager>
         if(@event.SceneName == "StartMenu")
         {
             //Start Menu Loaded fade out the black screen
+            BGMSpeaker.clip = bgmLibrary[0];
+            BGMSpeaker.loop = true;
+            musicFade = true;
+            BGMSpeaker.Play();
             transitioner.Fade(WhichTransitioner.START, GameEvents.fadeUIType.BG, null, false);
             
         }

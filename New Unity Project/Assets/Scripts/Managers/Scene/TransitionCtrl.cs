@@ -58,7 +58,7 @@ public class TransitionCtrl : MonoBehaviour
 
     IEnumerator BufferTime()
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
         fadingFinished = true;
         StopCoroutine("BufferTime");
     }
