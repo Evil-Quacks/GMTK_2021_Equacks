@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using MemoryEvents;
 using UnityEngine;
 using Utilities.Logger;
@@ -28,6 +29,9 @@ public class MemoryView : MonoBehaviour
     public float fadeSpeed;
     public float timeToHoldInteractToLock;
     //!-------------------------
+
+    [SerializeField]
+    List<SpriteRenderer> attemptJewls;
 
     IEnumerator timer;
     bool timerRunning;
@@ -178,7 +182,7 @@ public class MemoryView : MonoBehaviour
         //Play the audio file from the audio source.
         if (audio_mem != null && !audio_mem.isPlaying)
         {
-            // audio_mem.PlayOneShot(sfx_mem, sfxVolume);
+            audio_mem.PlayOneShot(sfx_mem, sfxVolume);
         }
     }
 
@@ -192,6 +196,11 @@ public class MemoryView : MonoBehaviour
             if (memoryToSpawn.attempts <= 0)
             {
                 fadeSprite = true;
+                if(memoryToSpawn.correct)
+                {
+                    //Level Over
+                    EventManager.instance.QueueEvent(new GameEvents.MemorySelected(false));
+                }
             }
         }
     }
