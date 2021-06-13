@@ -29,12 +29,19 @@ namespace GameEvents
     public struct FadeUI : iEvent
     {
         public readonly bool fadingIn;
-        public readonly fadeUIType;
+        public readonly fadeUIType whatToFade;
 
-        public FadeUI(bool fadeIn)
+        public FadeUI(bool fadeIn, fadeUIType fadingThis)
         {
             fadingIn = fadeIn;
+            whatToFade = fadingThis;
         }
-    };
+    }
+
+    public enum fadeUIType
+    {
+        TXT,
+        BG
+    }
 
 }
