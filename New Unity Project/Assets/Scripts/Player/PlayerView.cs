@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿#define DEBUG
+using System;
+using System.Collections.Generic;
 using UnityEditor.Animations;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(AnimatorController))]
@@ -8,6 +11,10 @@ public class PlayerView : MonoBehaviour
 {
     [SerializeField]
     Rigidbody2D playerRB;
+
+#if DEBUG
+    Text velocityText;
+#endif
 
     Dictionary<string, GameObject> playerStateColliders = new Dictionary<string, GameObject>();
 
@@ -31,6 +38,9 @@ public class PlayerView : MonoBehaviour
 
     private void Start()
     {
+#if DEBUG
+        velocityText = velocityText = GameObject.Find("VELOCITY_TEXT").GetComponent<Text>();
+#endif
         Debug.Log("PV ==> Created");
         EventManager.instance.AddListener<PlayerEvents.RespawnPlayer>(OnRespawnPlayer);
     }
@@ -42,7 +52,9 @@ public class PlayerView : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Debug.Log($"Current Velocity: {playerRB.velocity}");
+#if DEBUG
+        velocityText.text = $"Velocity: ({playerRB.velocity.x}, {playerRB.velocity.y})";
+#endif
         //Check if falling
         if (Physics2D.Raycast(this.transform.position, Vector2.down, 1f).collider)
         {
@@ -53,68 +65,37 @@ public class PlayerView : MonoBehaviour
         if (canMove)
         {
             Vector2 direction = Vector2.zero;
+            Vector2 playerVelocity = playerRB.velocity;
 
-            if ((Input.GetKey("right") || Input.GetKey("d")))
+            if ((Input.GetKey("right") || Input.GetKey("d")) && playerVelocity.x <= maxMoveVelocity)
             {
                 // To the right...
                 direction = Vector2.right;
+                playerRB.AddForce(direction * moveForce);
             }
-            else if ((Input.GetKey("left") || Input.GetKey("a")))
+            else if ((Input.GetKey("left") || Input.GetKey("a")) && playerVelocity.x >= (maxMoveVelocity * -1))
             {
                 // To the left ...
                 direction = Vector2.left;
+                playerRB.AddForce(direction * moveForce);
             }
             else if (Input.GetKey("down") || Input.GetKey("s"))
             {
                 //? how low can you go?
                 //* not very.... I'm gettin' old, fam :/
             }
+            else
+            {
+                if (playerVelocity != Vector2.zero && !isJumping)
+                    playerRB.AddForce(playerVelocity * playerSlowdownForce);
+            }
 
             if (Input.GetKey("space") && !isJumping)
             {
+                Debug.Log("Jump!");
                 // One hop this time...
-                direction += Vector2.up;
+                playerRB.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
                 isJumping = true;
-            }
-
-            UpdateMovement(direction, Time.fixedDeltaTime);
-        }
-    }
-
-    private void UpdateMovement(Vector2 direction, float delta)
-    {
-        Vector2 playerVelocity = playerRB.velocity;
-
-        if (direction == Vector2.zero && playerRB.velocity != Vector2.zero)
-            direction = playerRB.velocity * playerSlowdownForce;
-        else if (direction == Vector2.left)
-            // Reverse the current velocity, or begin fresh velocity in the negative x direction
-            direction = playerVelocity.x > 0 ? playerVelocity * playerSlowdownForce : Vector2.left;
-        else if (direction == Vector2.right)
-            // Reverse the current velocity, or begin fresh velocity in the positive x direction
-            direction = playerVelocity.x < 0 ? playerVelocity * playerSlowdownForce : Vector2.right;
-
-        // Vector2 currentPosition = new Vector2(this.transform.position.x, this.transform.position.y);
-
-        if (!isJumping)
-        {
-            // If we're not yet at max speed, keep accellerating. Otherwise, keep the velocity as-is
-            if (Mathf.Abs(playerVelocity.x) < maxMoveVelocity)
-                playerRB.AddForce(new Vector2(direction.x * moveForce, direction.y));
-            else
-                playerRB.AddForce(direction);
-        }
-        else
-        {
-            if (direction.y != Vector2.up.y || playerVelocity.normalized.y == Vector2.down.y)
-            {
-                // Obey gravity if we're not >.<
-                playerRB.AddForce(new Vector2(direction.x, direction.y * inAirForce));
-            }
-            else
-            {
-                // We're jumping upwards :D
-                playerRB.AddForce(new Vector2(direction.x, direction.y * jumpForce), ForceMode2D.Impulse);
             }
         }
     }
@@ -144,7 +125,7 @@ public class PlayerView : MonoBehaviour
             else if (other.gameObject.tag == "GRND")
             {
                 isJumping = false;
-                playerRB.velocity = Vector2.zero;
+                // playerRB.velocity = Vector2.zero;
                 //Raycast out
                 if (ReturnDirection(this.gameObject, other.gameObject) != HitDirection.Bottom)
                 {
