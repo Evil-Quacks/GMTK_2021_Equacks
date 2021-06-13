@@ -224,7 +224,7 @@ MonoBehaviour:
   whatIAm: 1
   img: {fileID: 151200663}
   text: {fileID: 0}
-  fadeSpeed: 0.5
+  fadeSpeed: 0.25
 --- !u!222 &151200666
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -373,7 +373,7 @@ MonoBehaviour:
   whatIAm: 0
   img: {fileID: 151200663}
   text: {fileID: 2070886357}
-  fadeSpeed: 1
+  fadeSpeed: 0.5
 --- !u!1 &241923745
 GameObject:
   m_ObjectHideFlags: 0
@@ -850,7 +850,7 @@ MonoBehaviour:
   whatIAm: 1
   img: {fileID: 915444330}
   text: {fileID: 0}
-  fadeSpeed: 0.5
+  fadeSpeed: 0.25
 --- !u!222 &915444333
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1507,7 +1507,7 @@ MonoBehaviour:
   whatIAm: 0
   img: {fileID: 0}
   text: {fileID: 1940065568}
-  fadeSpeed: 0.02
+  fadeSpeed: 0.5
 --- !u!114 &1940065568
 MonoBehaviour:
   m_ObjectHideFlags: 0

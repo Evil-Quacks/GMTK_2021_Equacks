@@ -43,7 +43,7 @@ public class GameManager : MonoSingleton<GameManager>
     [SerializeField]
     List<Narrative> narrativeBits;
 
-    int narrativeIndex;
+    int narrativeIndex = 0;
     
     #endregion
 
@@ -108,14 +108,36 @@ public class GameManager : MonoSingleton<GameManager>
         transitioner.fadingFinished = false;
         transitioner.Fade(WhichTransitioner.OPEN, GameEvents.fadeUIType.TXT, null, false);
         
+        yield return new WaitUntil(() => {return transitioner.fadingFinished;});
+
+        //Fade in First Quote
+        transitioner.fadingFinished = false;
+        transitioner.Fade(WhichTransitioner.GOOD, GameEvents.fadeUIType.BG, narrativeBits[narrativeIndex], true);
 
         yield return new WaitUntil(() => {return transitioner.fadingFinished;});
 
-        //Fade Out Black BG
+        //Fade out black screen
         transitioner.fadingFinished = false;
-        transitioner.Fade(WhichTransitioner.OPEN, GameEvents.fadeUIType.BG, null, false);
-        
+        transitioner.Fade(WhichTransitioner.OPEN, GameEvents.fadeUIType.BG, narrativeBits[narrativeIndex], false);
 
+        yield return new WaitUntil(() => {return transitioner.fadingFinished;});
+
+        //Fade in Narrative Text
+        transitioner.fadingFinished = false;
+        transitioner.Fade(WhichTransitioner.GOOD, GameEvents.fadeUIType.TXT, narrativeBits[narrativeIndex], true);
+        yield return new WaitUntil(() => {return transitioner.fadingFinished;});
+
+        //Let text sit on screen...
+        yield return new WaitForSeconds(5);
+
+        //Fade text out...
+        transitioner.fadingFinished = false;
+        transitioner.Fade(WhichTransitioner.GOOD, GameEvents.fadeUIType.TXT, narrativeBits[narrativeIndex], false);
+        yield return new WaitUntil(() => {return transitioner.fadingFinished;});
+
+        //Fade out Good BG...
+        transitioner.fadingFinished = false;
+        transitioner.Fade(WhichTransitioner.GOOD, GameEvents.fadeUIType.BG, narrativeBits[narrativeIndex], false);
         yield return new WaitUntil(() => {return transitioner.fadingFinished;});
 
         StopCoroutine("WaitToFadeOutToScene");
