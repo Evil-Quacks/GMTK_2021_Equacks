@@ -158,6 +158,9 @@ MonoBehaviour:
   playerRB: {fileID: 6378536412066522960}
   playerAnimCtrl: {fileID: 6378536412066522963}
   blobbySpriteRen: {fileID: 6378536412066522966}
+  jumpForce: 2
+  moveForce: 0
+  maxMoveVelocity: 10
 --- !u!1001 &6378536412490428060
 PrefabInstance:
   m_ObjectHideFlags: 0

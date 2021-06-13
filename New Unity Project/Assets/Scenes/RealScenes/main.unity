@@ -263,12 +263,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerStats:
-    totalHealth: 0
-    currentHealth: 0
-    moveForce: 0
-    maxMoveVelocity: 0
-    jumpImpulseForce: 0
-    airForce: 0
+    totalHealth: 50
+    currentHealth: 50
+    moveForce: 15
+    maxMoveVelocity: 10
+    jumpImpulseForce: 7
+    airForce: 9.8
   playerPrefab: {fileID: -4332775127973680775, guid: 87749bdd0fb510547a9aa9f1e2316da0, type: 3}
   memoryPrefab: {fileID: 0}
   follower: {fileID: 878318868}
