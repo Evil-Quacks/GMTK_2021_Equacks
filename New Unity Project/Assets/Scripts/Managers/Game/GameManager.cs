@@ -191,10 +191,18 @@ public class GameManager : MonoSingleton<GameManager>
     IEnumerator WaitForReadText(WhichTransitioner transToUse)
     {
         yield return new WaitForSeconds(5);
-        transitioner.Fade(transToUse, GameEvents.fadeUIType.BG, null, false);
-        transitioner.Fade(transToUse, GameEvents.fadeUIType.TXT, null, false);
-        yield return new WaitUntil(() => { return transitioner.fadingFinished;});
-        EventManager.instance.QueueEvent(new GameEvents.PlayerCanMove(true));
+        if(narrativeIndex >= 9)
+        {
+            transitioner.Fade(transToUse, GameEvents.fadeUIType.BG, null, false);
+            transitioner.Fade(transToUse, GameEvents.fadeUIType.TXT, null, false);
+            transitioner.Fade(WhichTransitioner.CREDITS,GameEvents.fadeUIType.BG,null,true);
+        }
+        else
+        {
+            yield return new WaitUntil(() => { return transitioner.fadingFinished;});
+            EventManager.instance.QueueEvent(new GameEvents.PlayerCanMove(true));
+        }  
+        
     }
     private void OnSpawnFound(EnvioEvents.SpawnerCreated @event)
     {

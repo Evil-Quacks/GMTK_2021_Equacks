@@ -13,6 +13,9 @@ public class TransitionCtrl : MonoBehaviour
     [SerializeField]
     fadeUIItemsCtrl badScreen;
 
+    [SerializeField]
+    fadeUIItemsCtrl credits;
+
     public bool fadingFinished = true;
 
     public void Fade(WhichTransitioner transitioner, GameEvents.fadeUIType uiType, Narrative currentNar, bool fadingIn)
@@ -40,6 +43,11 @@ public class TransitionCtrl : MonoBehaviour
             {
                 goodScreen.SetPhase(currentNar.messageToShow);
                 ctrlToCall = goodScreen;
+                break;
+            }
+            case WhichTransitioner.CREDITS:
+            {
+                ctrlToCall = credits;
                 break;
             }
             default:break;
@@ -73,5 +81,6 @@ public enum WhichTransitioner
     START,
     OPEN,
     GOOD,
-    BAD
+    BAD,
+    CREDITS
 }
