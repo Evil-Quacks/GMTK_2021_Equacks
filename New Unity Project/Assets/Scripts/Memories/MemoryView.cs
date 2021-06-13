@@ -1,13 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using System;
-using UnityEditor.Animations;
+using MemoryEvents;
 using UnityEngine;
-using UnityEngine.LowLevel;
+using Utilities.Logger;
 
-
-[RequireComponent (typeof(SpriteRenderer))]
-public class memoryView : MonoBehaviour
+[RequireComponent(typeof(SpriteRenderer))]
+public class MemoryView : MonoBehaviour
 {
     [SerializeField]
     AudioSource audio_mem;
@@ -31,22 +27,28 @@ public class memoryView : MonoBehaviour
     public float timeToHoldInteractToLock;
     //!-------------------------
 
-    public void Initalize(Memory memor, AudioClip sfx, float sfxVol, float fadeSpeed)
+    public void Initialize(Memory memory, AudioClip sfx, float sfxVol, float fadeSpeed)
     {
-        memoryToSpawn = memor;
+        memoryToSpawn = memory;
         sfx_mem = sfx;
         sfxVolume = sfxVol;
-        defaultAttempts = memor.attempts;
+        defaultAttempts = memory.attempts;
     }
 
-    private void Update() 
+    private void Start()
     {
-        if(playerInRange && !memoryToSpawn.levelOne)
+        Log.Message("MV", "CREATED");
+        EventManager.instance.AddListener<SpawnMemory>(OnSpawnMemory);
+    }
+
+    private void Update()
+    {
+        if (playerInRange && !memoryToSpawn.levelOne)
         {
-           if(Input.GetKeyUp("e") || timePressed > timeToHoldInteractToLock)
+            if (Input.GetKeyUp("e") || timePressed > timeToHoldInteractToLock)
             {
-                
-                if(timePressed >= timeToHoldInteractToLock)
+
+                if (timePressed >= timeToHoldInteractToLock)
                 {
                     SelectThisMemory();
                 }
@@ -57,41 +59,41 @@ public class memoryView : MonoBehaviour
                 }
                 ResetPressTime();
             }
-            else if(Input.GetKey("e"))
+            else if (Input.GetKey("e"))
             {
                 timePressed += Time.deltaTime;
             }
         }
-        else if(memoryToSpawn.levelOne)
+        else if (memoryToSpawn.levelOne)
         {
             //This is the memory they are trying to match to - just play it if they press
-            if(Input.GetKeyDown("f"))
+            if (Input.GetKeyDown("f"))
             {
                 PlayNote();
             }
         }
-        
+
     }
-    private void FixedUpdate() 
+    private void FixedUpdate()
     {
-        if(fadeSprite)
+        if (fadeSprite)
         {
             AdjustAlpha();
         }
-        
+
     }
 
-    private void OnTriggerEnter2D(Collider2D other) 
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "Player")
         {
             playerInRange = true;
         }
     }
 
-    private void OnTriggerExit2D(Collider2D other) 
+    private void OnTriggerExit2D(Collider2D other)
     {
-        if(other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "Player")
         {
             playerInRange = false;
             ResetPressTime();
@@ -102,14 +104,21 @@ public class memoryView : MonoBehaviour
     {
         timePressed = 0;
     }
+
     private void SelectThisMemory()
     {
         Debug.Log("SELECT THIS ONE");
         //EventManager.instance.QueueEvent(new GameEvents.MemorySelected(memoryToSpawn.correct));
     }
+
+    private void OnSpawnMemory(SpawnMemory @event)
+    {
+        //
+    }
+
     private void SpawnMemory(bool toSpawn)
     {
-        if(toSpawn)
+        if (toSpawn)
         {
             //reveal it
         }
@@ -129,22 +138,22 @@ public class memoryView : MonoBehaviour
     {
         Debug.Log("PLAY NOTE :D");
         //Play the audio file from the audio source.
-        if(!audio_mem.isPlaying)
+        if (!audio_mem.isPlaying)
         {
-           // audio_mem.PlayOneShot(sfx_mem, sfxVolume);
+            // audio_mem.PlayOneShot(sfx_mem, sfxVolume);
         }
     }
 
     private void RemoveOneAttempt()
     {
         //Remove one attempt from the memory & update visuals
-        if(memoryToSpawn.attempts > 0)
+        if (memoryToSpawn.attempts > 0)
         {
             memoryToSpawn.attempts -= 1;
 
-            if(memoryToSpawn.attempts <= 0)
+            if (memoryToSpawn.attempts <= 0)
             {
-               fadeSprite = true;
+                fadeSprite = true;
             }
         }
     }
@@ -154,7 +163,7 @@ public class memoryView : MonoBehaviour
         Color currentColor = spr_mem.color;
         float newAlpha = currentColor.a - (Mathf.Exp(fadeSpeed) * Time.deltaTime);
         spr_mem.color = new Color(currentColor.r, currentColor.g, currentColor.b, newAlpha);
-        if(newAlpha <= 0.3f)
+        if (newAlpha <= 0.3f)
         {
             fadeSprite = false;
         }
@@ -165,6 +174,4 @@ public class memoryView : MonoBehaviour
     {
         fadeSprite = true;
     }
-
-
 }
