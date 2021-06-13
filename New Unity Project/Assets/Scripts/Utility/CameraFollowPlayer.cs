@@ -24,22 +24,28 @@ public class CameraFollowPlayer : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        if (playerTransform != null)
-        {
-            if (playerTransform.position.y <= -6)
-            {
-                EventManager.instance.QueueEvent(new PlayerEvents.RespawnPlayer(playerTransform));
-            }
-            else
-            {
-                Vector3 temp = this.transform.position;
+        Vector3 temp = this.transform.position;
 
-                temp.x = playerTransform.position.x + offSet.x;
-                temp.y = playerTransform.position.y + offSet.y;
+        temp.x = playerTransform.position.x + offSet.x;
+        temp.y = playerTransform.position.y + offSet.y;
 
-                transform.position = temp;
-            }
+        transform.position = temp;
 
-        }
+        // if (playerTransform != null)
+        // {
+        //     if (playerTransform.position.y <= -6)
+        //     {
+        //         EventManager.instance.QueueEvent(new PlayerEvents.RespawnPlayer(playerTransform));
+        //     }
+        //     else
+        //     {
+        //         Vector3 temp = this.transform.position;
+
+        //         temp.x = playerTransform.position.x + offSet.x;
+        //         temp.y = playerTransform.position.y + offSet.y;
+
+        //         transform.position = temp;
+        //     }
+        // }
     }
 }
