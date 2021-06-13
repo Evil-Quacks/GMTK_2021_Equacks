@@ -5,9 +5,9 @@ using UnityEngine;
 [Serializable]
 public class Narrative
 {
-    int orderInStory;
-    string messageToShow;
-    
+    public int orderInStory;
+    public string messageToShow;
+    public NarrativeType moralType;
 }
 
 public enum NarrativeType

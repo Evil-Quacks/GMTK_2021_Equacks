@@ -23,6 +23,7 @@ public class fadUIItems : MonoBehaviour
     [SerializeField]
     float fadeSpeed;
 
+    Action currentCallback;
 
     public GameEvents.fadeUIType GetType()
     {
@@ -37,6 +38,11 @@ public class fadUIItems : MonoBehaviour
     public void SetMode(bool infade)
     {
         fadingIn = infade;
+    }
+
+    public void SetCallback(Action callMeBack)
+    {
+        currentCallback = callMeBack;
     }
 
     private void FixedUpdate() 
@@ -69,6 +75,8 @@ public class fadUIItems : MonoBehaviour
         if(newAlpha<= 0 || newAlpha >= 1)
         {
             fadingText = false;
+            currentCallback();
+            currentCallback = null;
         }
 
     }
@@ -91,6 +99,8 @@ public class fadUIItems : MonoBehaviour
         if(newAlpha<= 0 || newAlpha >= 1)
         {
             fadingBG = false;
+            currentCallback();
+            currentCallback = null;
         }
     }
 

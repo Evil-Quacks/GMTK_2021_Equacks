@@ -13,25 +13,14 @@ public class fadeUIItemsCtrl : MonoBehaviour
 
     bool fadingIn;
 
-    private void Awake() {
-        Subscribe();
-    }
+    Action whenFinished;
 
-    void Subscribe()
+    public void SetPhase(string messageToDisplay)
     {
-        if(EventManager.instance != null)
-        {
-            EventManager.instance.AddListener<GameEvents.SetCurrentMessage>(OnSetPhase);
-            EventManager.instance.AddListener<GameEvents.FadeUI>(OnFade);
-        }
+        currentMessage = messageToDisplay;
     }
 
-    void OnSetPhase(GameEvents.SetCurrentMessage @event)
-    {
-        currentMessage = @event.messageToDisplay;
-    }
-
-    void OnFade(GameEvents.FadeUI @event)
+    public void Fade(bool fadingIn, GameEvents.fadeUIType whatType, Action callbackOnFinished)
     {
         List<fadUIItems> matchingItemsOfType = itemsOfThisCtrl.FindAll( fi => fi.GetType() == @event.whatToFade);
 
@@ -66,6 +55,7 @@ public class fadeUIItemsCtrl : MonoBehaviour
             numberOfItemsFaded++;
             
         } while (numberOfItemsFaded < uiItems.Count);
+        whenFinished();
     }
 
     [ContextMenu("Test Fade In Text")]

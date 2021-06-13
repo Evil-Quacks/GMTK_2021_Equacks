@@ -74,7 +74,8 @@ public class GameManager : MonoSingleton<GameManager>
     {
         if(@event.SceneName == "StartMenu")
         {
-
+            //Start Menu Loaded fade out the black screen
+            
         }
         else if(@event.SceneName == "GameScene")
         {

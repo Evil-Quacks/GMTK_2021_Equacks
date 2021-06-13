@@ -275,6 +275,37 @@ MonoBehaviour:
   musicVolume: 0.5
   initialSpawnLocation: {x: 0, y: 0}
   transitioner: {fileID: 1341219819}
+  narrativeBits:
+  - orderInStory: 0
+    messageToShow: It used to be beautiful.
+    moralType: 0
+  - orderInStory: 1
+    messageToShow: The roots used to connect.
+    moralType: 0
+  - orderInStory: 2
+    messageToShow: Everything had a place.
+    moralType: 0
+  - orderInStory: 3
+    messageToShow: Then it all shattered...
+    moralType: 0
+  - orderInStory: 4
+    messageToShow: The ground up heaved.
+    moralType: 0
+  - orderInStory: 5
+    messageToShow: The roots broke.
+    moralType: 0
+  - orderInStory: 6
+    messageToShow: I can't find them as easily...
+    moralType: 2
+  - orderInStory: 6
+    messageToShow: I can reconnect them...
+    moralType: 1
+  - orderInStory: 7
+    messageToShow: I thought there used to be more...
+    moralType: 2
+  - orderInStory: 7
+    messageToShow: Until it is beautiful once again...
+    moralType: 1
 --- !u!4 &231988405
 Transform:
   m_ObjectHideFlags: 0
