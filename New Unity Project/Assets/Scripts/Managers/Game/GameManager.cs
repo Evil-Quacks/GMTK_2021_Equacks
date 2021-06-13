@@ -1,6 +1,4 @@
-﻿#define DEBUG
-
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Utilities.Logger;
@@ -52,7 +50,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     [SerializeField]
     List<GameObject> memoryStages = new List<GameObject>();
-    
+
     #endregion
 
     #region StartUp
@@ -94,9 +92,11 @@ public class GameManager : MonoSingleton<GameManager>
             EventManager.instance.AddListener<GameEvents.MemorySelected>(OnMemory);
             EventManager.instance.AddListener<SceneEvents.LoadedSceneRequested>(OnRequestedSceneLoaded);
             EventManager.instance.AddListener<GameEvents.StartGame>(OnStartGame);
-            EventManager.instance.AddListener<GameEvents.SendMemoryGOs>( ( e) => {
+            EventManager.instance.AddListener<GameEvents.SendMemoryGOs>((e) =>
+            {
                 memoryStages = e.memoryGroups;
                 memoryStages[0].SetActive(true);
+                Log.Value($"memoryStages should have Count of 7: memoryStages.Count: {memoryStages.Count}");
             });
         }
 
@@ -108,16 +108,16 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void OnRequestedSceneLoaded(SceneEvents.LoadedSceneRequested @event)
     {
-        if(@event.SceneName == "StartMenu")
+        if (@event.SceneName == "StartMenu")
         {
             BGMSpeaker.clip = bgmLibrary[0];
             BGMSpeaker.loop = true;
             musicFade = true;
             BGMSpeaker.Play();
             transitioner.Fade(WhichTransitioner.START, GameEvents.fadeUIType.BG, null, false);
-            
+
         }
-        else if(@event.SceneName == "Game")
+        else if (@event.SceneName == "Game")
         {
             //Game Scene as loaded successfully...
             StartCoroutine(WaitToFadeOutToScene());
@@ -129,9 +129,9 @@ public class GameManager : MonoSingleton<GameManager>
     {
         //Fade In Quote & Author
         transitioner.fadingFinished = false;
-        transitioner.Fade(WhichTransitioner.OPEN, GameEvents.fadeUIType.TXT,null,true);
-        
-        yield return new WaitUntil(() => {return transitioner.fadingFinished;});
+        transitioner.Fade(WhichTransitioner.OPEN, GameEvents.fadeUIType.TXT, null, true);
+
+        yield return new WaitUntil(() => { return transitioner.fadingFinished; });
 
         //Wait a bit with the quote on screen
         yield return new WaitForSeconds(5);
@@ -139,25 +139,25 @@ public class GameManager : MonoSingleton<GameManager>
         //Fade Out Text
         transitioner.fadingFinished = false;
         transitioner.Fade(WhichTransitioner.OPEN, GameEvents.fadeUIType.TXT, null, false);
-        yield return new WaitUntil(() => {return transitioner.fadingFinished;});
+        yield return new WaitUntil(() => { return transitioner.fadingFinished; });
 
         //Fade in First Narrative
         transitioner.fadingFinished = false;
         transitioner.Fade(WhichTransitioner.GOOD, GameEvents.fadeUIType.BG, narrativeBits[narrativeIndex], true);
         //Start BGM
 
-        yield return new WaitUntil(() => {return transitioner.fadingFinished;});
+        yield return new WaitUntil(() => { return transitioner.fadingFinished; });
 
         //Fade out black screen
         transitioner.fadingFinished = false;
         transitioner.Fade(WhichTransitioner.OPEN, GameEvents.fadeUIType.BG, narrativeBits[narrativeIndex], false);
 
-        yield return new WaitUntil(() => {return transitioner.fadingFinished;});
+        yield return new WaitUntil(() => { return transitioner.fadingFinished; });
 
         //Fade in Narrative Text
         transitioner.fadingFinished = false;
         transitioner.Fade(WhichTransitioner.GOOD, GameEvents.fadeUIType.TXT, narrativeBits[narrativeIndex], true);
-        yield return new WaitUntil(() => {return transitioner.fadingFinished;});
+        yield return new WaitUntil(() => { return transitioner.fadingFinished; });
 
         //Let text sit on screen...
         yield return new WaitForSeconds(5);
@@ -165,12 +165,12 @@ public class GameManager : MonoSingleton<GameManager>
         //Fade text out...
         transitioner.fadingFinished = false;
         transitioner.Fade(WhichTransitioner.GOOD, GameEvents.fadeUIType.TXT, narrativeBits[narrativeIndex], false);
-        yield return new WaitUntil(() => {return transitioner.fadingFinished;});
+        yield return new WaitUntil(() => { return transitioner.fadingFinished; });
 
         //Fade out Good BG...
         transitioner.fadingFinished = false;
         transitioner.Fade(WhichTransitioner.GOOD, GameEvents.fadeUIType.BG, narrativeBits[narrativeIndex], false);
-        yield return new WaitUntil(() => {return transitioner.fadingFinished;});
+        yield return new WaitUntil(() => { return transitioner.fadingFinished; });
 
         EventManager.instance.QueueEvent(new GameEvents.PlayerCanMove(true));
 
@@ -179,15 +179,15 @@ public class GameManager : MonoSingleton<GameManager>
 
     IEnumerator WaitForQuote(string thenLoadThisScene)
     {
-        yield return new WaitUntil(() => {return transitioner.fadingFinished;});
-        if(thenLoadThisScene != "")
+        yield return new WaitUntil(() => { return transitioner.fadingFinished; });
+        if (thenLoadThisScene != "")
         {
             EventManager.instance.QueueEvent(new SceneEvents.LoadNextScene("Game"));
         }
 
         StopCoroutine("WaitForQuote");
     }
-    
+
     IEnumerator WaitForReadText(WhichTransitioner transToUse)
     {
         yield return new WaitForSeconds(5);
@@ -246,13 +246,13 @@ public class GameManager : MonoSingleton<GameManager>
         Narrative currentNarr;
         WhichTransitioner currentTrans;
         //3 pity tries
-        if(playerStats.currentHealth >= narrativeIndex - 3)
+        if (playerStats.currentHealth >= narrativeIndex - 3)
         {
             //Doing great didn't miss any
-            if(narrativeIndex >= 6)
+            if (narrativeIndex >= 6)
             {
                 //They diverge
-                currentNarr = narrativeBits.Find( n => {return n.moralType == NarrativeType.GOOD && n.orderInStory == narrativeIndex;});
+                currentNarr = narrativeBits.Find(n => { return n.moralType == NarrativeType.GOOD && n.orderInStory == narrativeIndex; });
             }
             else
             {
@@ -261,14 +261,14 @@ public class GameManager : MonoSingleton<GameManager>
             transitioner.Fade(WhichTransitioner.GOOD, GameEvents.fadeUIType.BG, currentNarr, true);
             transitioner.Fade(WhichTransitioner.GOOD, GameEvents.fadeUIType.TXT, currentNarr, true);
             currentTrans = WhichTransitioner.GOOD;
-            
+
         }
         else
         {
-            if(narrativeIndex >= 6)
+            if (narrativeIndex >= 6)
             {
                 //They diverge
-                currentNarr = narrativeBits.Find( n => {return n.moralType == NarrativeType.BAD && n.orderInStory == narrativeIndex;});
+                currentNarr = narrativeBits.Find(n => { return n.moralType == NarrativeType.BAD && n.orderInStory == narrativeIndex; });
             }
             else
             {
@@ -284,8 +284,6 @@ public class GameManager : MonoSingleton<GameManager>
         EventManager.instance.QueueEvent(new GameEvents.PlayerCanMove(false));
         memoryStages[narrativeIndex].SetActive(true);
         StartCoroutine(WaitForReadText(currentTrans));
-
-
     }
 
     private void OnStartGame(GameEvents.StartGame st)
@@ -293,9 +291,8 @@ public class GameManager : MonoSingleton<GameManager>
         //Fade in black BG
         transitioner.fadingFinished = false;
         transitioner.Fade(WhichTransitioner.OPEN, GameEvents.fadeUIType.BG, null, true);
-        
-        StartCoroutine(WaitForQuote("Game"));
 
+        StartCoroutine(WaitForQuote("Game"));
 
     }
 }
