@@ -221,7 +221,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cebeaccc6997eb458db0fe390206bab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  whatIAm: 2
+  whatIAm: 1
   img: {fileID: 151200663}
   text: {fileID: 0}
   fadeSpeed: 0.5
@@ -270,6 +270,7 @@ MonoBehaviour:
     jumpImpulseForce: 0
     airForce: 0
   playerPrefab: {fileID: -4332775127973680775, guid: 87749bdd0fb510547a9aa9f1e2316da0, type: 3}
+  memoryPrefab: {fileID: 0}
   follower: {fileID: 878318868}
   cameraFollowOffset: {x: 0, y: 0}
   musicVolume: 0.5
@@ -846,7 +847,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cebeaccc6997eb458db0fe390206bab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  whatIAm: 2
+  whatIAm: 1
   img: {fileID: 915444330}
   text: {fileID: 0}
   fadeSpeed: 0.5
@@ -1196,6 +1197,7 @@ MonoBehaviour:
   blackStartingScreen: {fileID: 1580553332}
   goodScreen: {fileID: 915444331}
   badScreen: {fileID: 151200664}
+  fadingFinished: 0
 --- !u!1 &1575086450
 GameObject:
   m_ObjectHideFlags: 0
@@ -1341,7 +1343,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cebeaccc6997eb458db0fe390206bab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  whatIAm: 2
+  whatIAm: 1
   img: {fileID: 1580553331}
   text: {fileID: 0}
   fadeSpeed: 0.5

@@ -19,9 +19,9 @@ public class CameraFollowPlayer : MonoBehaviour
             EventManager.instance.AddListener<PlayerEvents.SendTransform>((e) =>
             {
                 playerTransform = e.playerTransform;
+                sleeping = false;
             });
         }
-        sleeping = false;
     }
 
     // Update is called once per frame

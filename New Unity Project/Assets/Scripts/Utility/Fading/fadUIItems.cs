@@ -75,7 +75,7 @@ public class fadUIItems : MonoBehaviour
         if(newAlpha<= 0 || newAlpha >= 1)
         {
             fadingText = false;
-            currentCallback();
+            if(currentCallback != null) currentCallback();
             currentCallback = null;
         }
 
@@ -99,7 +99,7 @@ public class fadUIItems : MonoBehaviour
         if(newAlpha<= 0 || newAlpha >= 1)
         {
             fadingBG = false;
-            currentCallback();
+            if(currentCallback != null) currentCallback();
             currentCallback = null;
         }
     }

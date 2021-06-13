@@ -56,7 +56,7 @@ public class fadeUIItemsCtrl : MonoBehaviour
             numberOfItemsFaded++;
             
         } while (numberOfItemsFaded < uiItems.Count);
-        whenFinished();
+        if(whenFinished != null) whenFinished();
     }
 
     
