@@ -2,6 +2,7 @@
 
 using System.Collections;
 using UnityEngine;
+using Utilities.Logger;
 
 public class GameManager : MonoSingleton<GameManager>
 {
@@ -13,6 +14,9 @@ public class GameManager : MonoSingleton<GameManager>
 
     [SerializeField]
     PlayerView playerPrefab;
+
+    [SerializeField]
+    MemoryView memoryPrefab;
 
     [Header("Camera Set Up")]
     [SerializeField]
@@ -63,12 +67,12 @@ public class GameManager : MonoSingleton<GameManager>
         {
             //Subscribe to player / game events
             EventManager.instance.AddListener<EnvioEvents.SpawnerCreated>(OnSpawnFound);
+            EventManager.instance.AddListener<EnvioEvents.MemorySpawnerCreated>(OnSpawnMemory);
             EventManager.instance.AddListener<PlayerEvents.RespawnPlayer>(OnRespawnPlayer);
             EventManager.instance.AddListener<GameEvents.GameOver>(OnGameOver);
             EventManager.instance.AddListener<GameEvents.MemorySelected>(OnMemory);
         }
     }
-
     #endregion
 
     #region Ready Scene Change
@@ -82,14 +86,18 @@ public class GameManager : MonoSingleton<GameManager>
         // audioSrc.Play ();
     }
 
+    private void OnSpawnMemory(EnvioEvents.MemorySpawnerCreated @event)
+    {
+        Log.Value($"This memory: {@event.memory} is spawning");
+        MemoryController memoryController = new MemoryController(memoryPrefab, @event.memory, @event.memorySpawnerLocation);
+    }
+
     private void OnRespawnPlayer(PlayerEvents.RespawnPlayer @event)
     {
         Transform playerTransform = @event.playerTransform;
 
         playerTransform.position = initialSpawnLocation;
-        // EventManager.instance.QueueEvent (new PlayerEvents.ShapeShift (PState.SQUARE));
     }
-
     #endregion
 
     private void OnGameOver(GameEvents.GameOver ev)
