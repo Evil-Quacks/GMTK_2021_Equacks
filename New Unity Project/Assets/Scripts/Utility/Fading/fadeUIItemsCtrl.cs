@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,11 +21,11 @@ public class fadeUIItemsCtrl : MonoBehaviour
         currentMessage = messageToDisplay;
     }
 
-    public void Fade(bool fadingIn, GameEvents.fadeUIType whatType, Action callbackOnFinished)
+    public void Fade(bool ctrlfadingIn, GameEvents.fadeUIType whatType, Action callbackOnFinished)
     {
-        List<fadUIItems> matchingItemsOfType = itemsOfThisCtrl.FindAll( fi => fi.GetType() == @event.whatToFade);
+        List<fadUIItems> matchingItemsOfType = itemsOfThisCtrl.FindAll( fi => fi.GetType() == whatType);
 
-        fadingIn = @event.fadingIn;
+        fadingIn = ctrlfadingIn;
 
         if(matchingItemsOfType.Count != 0 )
         {
@@ -58,17 +59,5 @@ public class fadeUIItemsCtrl : MonoBehaviour
         whenFinished();
     }
 
-    [ContextMenu("Test Fade In Text")]
-    public void TEST_FADEIN()
-    {
-        GameEvents.FadeUI mockEvent = new GameEvents.FadeUI(true, GameEvents.fadeUIType.TXT);
-        OnFade(mockEvent);
-    }
-
-    [ContextMenu("Test Fade Out Text")]
-    public void TEST_FADEIOUT()
-    {
-        GameEvents.FadeUI mockEvent = new GameEvents.FadeUI(false, GameEvents.fadeUIType.TXT);
-        OnFade(mockEvent);
-    }
+    
 }

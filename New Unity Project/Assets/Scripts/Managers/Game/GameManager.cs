@@ -42,6 +42,8 @@ public class GameManager : MonoSingleton<GameManager>
 
     [SerializeField]
     List<Narrative> narrativeBits;
+
+    int narrativeIndex;
     
     #endregion
 
@@ -66,6 +68,7 @@ public class GameManager : MonoSingleton<GameManager>
             EventManager.instance.AddListener<GameEvents.GameOver>(OnGameOver);
             EventManager.instance.AddListener<GameEvents.MemorySelected>(OnMemory);
             EventManager.instance.AddListener<SceneEvents.LoadedSceneRequested>(OnRequestedSceneLoaded);
+            EventManager.instance.AddListener<GameEvents.StartGame>(OnStartGame);
         }
 
         EventManager.instance.QueueEvent(new SceneEvents.LoadedSceneRequested("StartMenu"));
@@ -79,15 +82,38 @@ public class GameManager : MonoSingleton<GameManager>
         if(@event.SceneName == "StartMenu")
         {
             //Start Menu Loaded fade out the black screen
+            transitioner.Fade(WhichTransitioner.START, GameEvents.fadeUIType.BG, null, false);
             
         }
-        else if(@event.SceneName == "GameScene")
+        else if(@event.SceneName == "Game")
         {
             //Game Scene as loaded successfully...
+            StartCoroutine(WaitToFadeOutToScene());
             follower.WakeUp();
         }
     }
 
+    IEnumerator WaitToFadeOutToScene()
+    {
+        //Fade In Quote & Author
+        transitioner.Fade(WhichTransitioner.OPEN, GameEvents.fadeUIType.TXT,null,false);
+
+        yield return new WaitUntil(() => {return transitioner.fadingFinished;});
+
+        //Wait a bit with the quote on screen
+        yield return new WaitForSeconds(4);
+
+        //Fade Out Text
+        transitioner.Fade(WhichTransitioner.OPEN, GameEvents.fadeUIType.TXT, null, false);
+
+        yield return new WaitUntil(() => {return transitioner.fadingFinished;});
+
+        //Fade Out Black BG
+        transitioner.Fade(WhichTransitioner.OPEN, GameEvents.fadeUIType.BG, null, false);
+        yield return new WaitUntil(() => {return transitioner.fadingFinished;});
+
+        StopCoroutine("WaitToFadeOutToScene");
+    }
     private void OnSpawnFound(EnvioEvents.SpawnerCreated @event)
     {
         PlayerController pCtrl = new PlayerController(playerPrefab, playerStats, @event.spawnerLoc);
@@ -119,13 +145,33 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void OnMemory(GameEvents.MemorySelected ms)
     {
+        narrativeIndex++;
         if (ms.wasPlayerCorrect)
         {
-            //Yay...confetti....woo...so smart, much wow
-            //Add to player points
+            playerStats.currentHealth += 1;
         }
 
-        // No seriously load the next narrative line & memories or this time
+        //3 pity tries
+        if(playerStats.currentHealth >= narrativeIndex - 3)
+        {
+            //Doing great didn't miss any
+            transitioner.Fade(WhichTransitioner.GOOD, GameEvents.fadeUIType.BG, narrativeBits[narrativeIndex], true);
+            transitioner.Fade(WhichTransitioner.GOOD, GameEvents.fadeUIType.TXT, narrativeBits[narrativeIndex], true);
+        }
+        else
+        {
+            transitioner.Fade(WhichTransitioner.BAD, GameEvents.fadeUIType.BG, narrativeBits[narrativeIndex], true);
+            transitioner.Fade(WhichTransitioner.BAD, GameEvents.fadeUIType.TXT, narrativeBits[narrativeIndex], true);
+        }
+
+        //Set Up all the memories & then call the same but reverse, txt first than bg.
     }
 
+    private void OnStartGame(GameEvents.StartGame st)
+    {
+        //Fade in black BG
+        transitioner.Fade(WhichTransitioner.START, GameEvents.fadeUIType.BG, null, true);
+        //Load Scene In BG
+        EventManager.instance.QueueEvent(new SceneEvents.LoadNextScene("Game"));
+    }
 }

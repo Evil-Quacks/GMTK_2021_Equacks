@@ -13,47 +13,66 @@ public class TransitionCtrl : MonoBehaviour
     [SerializeField]
     fadeUIItemsCtrl badScreen;
 
-    bool fadingFinished = false;
+    public bool fadingFinished = false;
     public void StartingTransition()
     {
-        blackStartingScreen.Fade(false,GameEvents.fadeUIType.BG);
+        blackStartingScreen.Fade(false,GameEvents.fadeUIType.BG, null);
     }
 
-    public void FadeIn(WhichTransitioner transitioner, GameEvents.fadeUIType uiType, Narrative currentNar)
+    public void Fade(WhichTransitioner transitioner, GameEvents.fadeUIType uiType, Narrative currentNar, bool fadingIn)
     {
         if(fadingFinished)
         {
+            fadeUIItemsCtrl ctrlToCall = null;
             switch (transitioner)
             {
                 case WhichTransitioner.START:
                 {
-                    //Background first
-                    blackStartingScreen.Fade(true,GameEvents.fadeUIType.BG, DoneFading);
+                    ctrlToCall = blackStartingScreen;
+                    break;
                 }
                 case WhichTransitioner.OPEN:
                 {
-                    blackStartingScreen.Fade(false, uiType, DoneFading);
+                    ctrlToCall = blackStartingScreen;
+                    break;
                 }
+                case WhichTransitioner.BAD:
+                {
+                    badScreen.SetPhase(currentNar.messageToShow);
+                    ctrlToCall = badScreen;
+                    break;
+                }
+                case WhichTransitioner.GOOD:
+                {
+                    goodScreen.SetPhase(currentNar.messageToShow);
+                    ctrlToCall = goodScreen;
+                    break;
+                }
+                default:break;
+            }
 
-                default:
+            if(ctrlToCall!= null)
+            {
+                ctrlToCall.Fade(fadingIn,uiType,DoneFading);
             }
         }
         else
         {
-            StartCoroutine(WaitingForFinish);
+            StartCoroutine(WaitingForFinish(transitioner, uiType, currentNar, fadingIn));
         }
         
     }
 
-    IEnumerator WaitingForFinish(WhichTransitioner thisTransitioner, GameEvents.fadeUIType uiType)
+    IEnumerator WaitingForFinish(WhichTransitioner thisTransitioner, GameEvents.fadeUIType uiType, Narrative nar, bool fadingIn)
     {
-        yield return new WaitUntil(fadingFinished);
-        FadeIn(thisTransitioner, uiType);
+        yield return new WaitUntil(() =>{return fadingFinished;});
+        Fade(thisTransitioner, uiType, nar, fadingIn );
     }
 
     private void DoneFading()
     {
         fadingFinished = true;
+        StopCoroutine("WaitingForFinish");
     }
 }
 
