@@ -107,12 +107,12 @@ public class GameManager : MonoSingleton<GameManager>
         //Fade Out Text
         transitioner.fadingFinished = false;
         transitioner.Fade(WhichTransitioner.OPEN, GameEvents.fadeUIType.TXT, null, false);
-        
         yield return new WaitUntil(() => {return transitioner.fadingFinished;});
 
-        //Fade in First Quote
+        //Fade in First Narrative
         transitioner.fadingFinished = false;
         transitioner.Fade(WhichTransitioner.GOOD, GameEvents.fadeUIType.BG, narrativeBits[narrativeIndex], true);
+        //Start BGM
 
         yield return new WaitUntil(() => {return transitioner.fadingFinished;});
 
