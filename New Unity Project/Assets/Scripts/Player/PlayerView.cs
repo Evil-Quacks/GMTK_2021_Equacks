@@ -25,10 +25,13 @@ public class PlayerView : MonoBehaviour
 
     Collider2D currentObstacle;
 
+    [SerializeField]
     float jumpForce;
 
+    [SerializeField]
     float moveForce;
 
+    [SerializeField]
     float maxMoveVelocity;
 
     float inAirForce;
@@ -52,8 +55,8 @@ public class PlayerView : MonoBehaviour
         if (Physics2D.Raycast(this.transform.position, Vector2.down, 1f).collider)
         {
             isJumping = false;
-            playerAnimCtrl.SetBool("fall", false);
-            playerAnimCtrl.SetBool("onground", true);
+            playerAnimCtrl.SetBool("blobby_Fall", false);
+            playerAnimCtrl.SetBool("blobby_Land", true);
 
             // Debug.Log("FALLING");
         }
