@@ -13,7 +13,11 @@ public class PlayerView : MonoBehaviour
 
     Dictionary<string, GameObject> playerStateColliders = new Dictionary<string, GameObject>();
 
+    [SerializeField]
     Animator playerAnimCtrl;
+
+    [SerializeField]
+    SpriteRenderer blobbySpriteRen;
 
     bool canMove = true;
 
@@ -48,7 +52,15 @@ public class PlayerView : MonoBehaviour
         if (Physics2D.Raycast(this.transform.position, Vector2.down, 1f).collider)
         {
             isJumping = false;
+            playerAnimCtrl.SetBool("fall", false);
+            playerAnimCtrl.SetBool("onground", true);
+
             // Debug.Log("FALLING");
+        }
+
+        if(playerRB.velocity.y < Vector2.zero.y)
+        {
+            playerAnimCtrl.SetBool("fall", true);
         }
 
         if (canMove)
@@ -59,12 +71,16 @@ public class PlayerView : MonoBehaviour
             if ((Input.GetKey("right") || Input.GetKey("d")) && playerVelocity.x <= maxMoveVelocity)
             {
                 // To the right...
+                blobbySpriteRen.flipX=false;
+                if(!isJumping) playerAnimCtrl.SetBool("blobby_Moving", true);
                 direction = Vector2.right;
                 playerRB.AddForce(direction * moveForce);
             }
             else if ((Input.GetKey("left") || Input.GetKey("a")) && playerVelocity.x >= (maxMoveVelocity * -1))
             {
                 // To the left ...
+                blobbySpriteRen.flipX=true;
+                if(!isJumping) playerAnimCtrl.SetBool("blobby_Moving", true);
                 direction = Vector2.left;
                 playerRB.AddForce(direction * moveForce);
             }
@@ -72,9 +88,11 @@ public class PlayerView : MonoBehaviour
             {
                 //? how low can you go?
                 //* not very.... I'm gettin' old, fam :/
+                //* gotta start doing those stretches everyday. Yoga is apparently good.
             }
             else
             {
+                playerAnimCtrl.SetBool("blobby_Moving", false);
                 if (playerVelocity != Vector2.zero && !isJumping)
                     playerRB.AddForce(playerVelocity * playerSlowdownForce);
             }
@@ -82,6 +100,9 @@ public class PlayerView : MonoBehaviour
             if (Input.GetKey("space") && !isJumping)
             {
                 Debug.Log("Jump!");
+                //Stop HORIZ movement anim...
+                playerAnimCtrl.SetBool("blobby_Moving", false);
+                playerAnimCtrl.SetBool("jump", true);
                 // One hop this time...
                 playerRB.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
                 isJumping = true;
@@ -177,7 +198,6 @@ public class PlayerView : MonoBehaviour
         Debug.Log("Sorry, but that's not a key to this door");
     }
 
-    // TOOK THIS CODE FROM UNITY FORUMS - NEEDS REVIEWED AND POSSIBLY REVISED
     private enum HitDirection { None, Top, Bottom, Forward, Back, Left, Right }
     private HitDirection ReturnDirection(GameObject player, GameObject objCollision)
     {

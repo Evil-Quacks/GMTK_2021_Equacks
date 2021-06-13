@@ -156,6 +156,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerRB: {fileID: 6378536412066522960}
+  playerAnimCtrl: {fileID: 6378536412066522963}
+  blobbySpriteRen: {fileID: 6378536412066522966}
 --- !u!1001 &6378536412490428060
 PrefabInstance:
   m_ObjectHideFlags: 0
