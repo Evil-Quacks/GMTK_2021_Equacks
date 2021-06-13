@@ -38,24 +38,9 @@ public class GameManager : MonoSingleton<GameManager>
         //Subscribe
         Subscribe();
         Debug.Log("GM ==> CREATED");
-        //Load Scene
-        StartCoroutine(LoadAsyncFirstScene());
-        // follower.offSet = cameraFollowOffset;
+        EvilSceneManager.instance.WakeUp();
     }
 
-    IEnumerator LoadAsyncFirstScene()
-    {
-#if !DEBUG
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("LEVEL-1", LoadSceneMode.Additive);
-
-        while (!asyncLoad.isDone)
-        {
-            yield return null;
-        }
-#else
-        yield return null;
-#endif
-    }
 
     void Subscribe()
     {
@@ -66,12 +51,29 @@ public class GameManager : MonoSingleton<GameManager>
             EventManager.instance.AddListener<PlayerEvents.RespawnPlayer>(OnRespawnPlayer);
             EventManager.instance.AddListener<GameEvents.GameOver>(OnGameOver);
             EventManager.instance.AddListener<GameEvents.MemorySelected>(OnMemory);
+            EventManager.instance.AddListener<SceneEvents.LoadedSceneRequested>(OnRequestedSceneLoaded);
         }
+
+        EventManager.instance.QueueEvent(new SceneEvents.LoadedSceneRequested("StartMenu"));
     }
 
     #endregion
 
     #region Ready Scene Change
+
+    private void OnRequestedSceneLoaded(SceneEvents.LoadedSceneRequested @event)
+    {
+        if(@event.SceneName == "StartMenu")
+        {
+
+        }
+        else if(@event.SceneName == "GameScene")
+        {
+            //Game Scene as loaded successfully...
+            follower.WakeUp();
+        }
+    }
+
     private void OnSpawnFound(EnvioEvents.SpawnerCreated @event)
     {
         PlayerController pCtrl = new PlayerController(playerPrefab, playerStats, @event.spawnerLoc);
