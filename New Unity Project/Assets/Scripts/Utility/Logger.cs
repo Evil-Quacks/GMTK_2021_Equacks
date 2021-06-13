@@ -5,24 +5,33 @@ namespace Utilities.Logger
 {
     public static class Log
     {
-        public static void Error(String message)
+        private static void ShowLog(String message)
         {
-            Debug.Log($"<color=red>ERROR</color> <color=teal>==></color> {message}");
+            Debug.Log(message);
         }
 
-        public static void Value(String message)
+        public static void Error(String message, bool hideErrorsInFile = false)
         {
-            Debug.Log($"<color=yellow>VALUE</color> <color=teal>==></color> {message}");
+            if (!hideErrorsInFile)
+                Debug.Log($"<color=red>ERROR</color> <color=teal>==></color> {message}");
         }
 
-        public static void Message(String className = "SYSTEM", String message = "message")
+        public static void Value(String message, bool hideValuesInFile = false)
         {
-            Debug.Log($"<color=cyan>{className}</color> <color=teal>==></color> {message}");
+            if (!hideValuesInFile)
+                Debug.Log($"<color=yellow>VALUE</color> <color=teal>==></color> {message}");
         }
 
-        public static void Created(String className)
+        public static void Message(String className = "SYSTEM", String message = "message", bool hideMessagesInFile = false)
         {
-            Message(className, "CREATED");
+            if (!hideMessagesInFile)
+                Debug.Log($"<color=cyan>{className}</color> <color=teal>==></color> {message}");
+        }
+
+        public static void Created(String className, bool hideCreatedInFile = false)
+        {
+            if (hideCreatedInFile)
+                Message(className, "CREATED");
         }
     }
 }

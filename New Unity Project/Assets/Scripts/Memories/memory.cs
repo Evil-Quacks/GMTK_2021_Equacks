@@ -6,6 +6,6 @@ public class Memory
 {
     public AudioSource memorySFX;
     public bool correct;
-    public int attempts;
+    public int attempts = 3;
     public bool levelOne;
 }
