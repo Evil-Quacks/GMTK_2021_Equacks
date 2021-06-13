@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,14 +6,15 @@ using UnityEngine.SceneManagement;
 
 public class EvilSceneManager : MonoSingleton<EvilSceneManager>
 {
-    private string currentScene;
-    private string oldSceneStillActive;
+    private string currentActiveScene;
 
+    private string sceneToUnload;
+
+    private int sqIndex = 0;
     private string mainScene = "main";
     public void WakeUp()
     {
         Subscribe();
-        currentScene = mainScene;
     }
 
     private void Subscribe()
@@ -33,10 +35,9 @@ public class EvilSceneManager : MonoSingleton<EvilSceneManager>
     {
         try
         {
+            sceneToUnload = currentActiveScene;
+            currentActiveScene = sceneName;
             SceneManager.LoadSceneAsync(sceneName,LoadSceneMode.Additive);
-
-            oldSceneStillActive = currentScene;
-            currentScene = sceneName;
         }
         catch (System.Exception x)
         {
@@ -48,23 +49,15 @@ public class EvilSceneManager : MonoSingleton<EvilSceneManager>
     void OnSceneLoaded(Scene sceneLoaded, LoadSceneMode mod)
     {
         string loadedSceneName = sceneLoaded.name;
-        if(loadedSceneName == currentScene && oldSceneStillActive != mainScene )
+        if(loadedSceneName != "main" && sceneToUnload != null)
         {
-            this.UnloadSceneAsync(SceneManager.GetSceneByName(oldSceneStillActive));
-            SceneManager.SetActiveScene(sceneLoaded);
+            //If we're loading a scene other than main...
+            SceneManager.UnloadSceneAsync(sceneToUnload);
         }
-    }
-
-    public static AsyncOperation UnloadSceneAsync(SceneManagement.Scene sc)
-    {
-        
     }
     void OnSceneUnload( Scene sceneUnloaded)
     {
-        if(sceneUnloaded.name == oldSceneStillActive)
-        {
-            oldSceneStillActive = mainScene;
-        }
+        EventManager.instance.QueueEvent(new SceneEvents.LoadedSceneRequested(currentActiveScene));
     }
 
 }

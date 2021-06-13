@@ -15,64 +15,56 @@ public class TransitionCtrl : MonoBehaviour
 
     public bool fadingFinished = true;
 
-    private void Awake() {
-        fadingFinished = true;
-    }
-    
     public void Fade(WhichTransitioner transitioner, GameEvents.fadeUIType uiType, Narrative currentNar, bool fadingIn)
     {
-        if(fadingFinished)
+        fadeUIItemsCtrl ctrlToCall = null;
+        switch (transitioner)
         {
-            fadeUIItemsCtrl ctrlToCall = null;
-            switch (transitioner)
+            case WhichTransitioner.START:
             {
-                case WhichTransitioner.START:
-                {
-                    ctrlToCall = blackStartingScreen;
-                    break;
-                }
-                case WhichTransitioner.OPEN:
-                {
-                    ctrlToCall = blackStartingScreen;
-                    break;
-                }
-                case WhichTransitioner.BAD:
-                {
-                    badScreen.SetPhase(currentNar.messageToShow);
-                    ctrlToCall = badScreen;
-                    break;
-                }
-                case WhichTransitioner.GOOD:
-                {
-                    goodScreen.SetPhase(currentNar.messageToShow);
-                    ctrlToCall = goodScreen;
-                    break;
-                }
-                default:break;
+                ctrlToCall = blackStartingScreen;
+                break;
             }
+            case WhichTransitioner.OPEN:
+            {
+                ctrlToCall = blackStartingScreen;
+                break;
+            }
+            case WhichTransitioner.BAD:
+            {
+                badScreen.SetPhase(currentNar.messageToShow);
+                ctrlToCall = badScreen;
+                break;
+            }
+            case WhichTransitioner.GOOD:
+            {
+                goodScreen.SetPhase(currentNar.messageToShow);
+                ctrlToCall = goodScreen;
+                break;
+            }
+            default:break;
+        }
 
-            if(ctrlToCall!= null)
-            {
-                ctrlToCall.Fade(fadingIn,uiType,DoneFading);
-            }
+        if(ctrlToCall!= null)
+        {
+            ctrlToCall.Fade(fadingIn,uiType,DoneFading);
         }
         else
         {
-            StartCoroutine(WaitingForFinish(transitioner, uiType, currentNar, fadingIn));
+            fadingFinished = true;
         }
         
     }
 
-    IEnumerator WaitingForFinish(WhichTransitioner thisTransitioner, GameEvents.fadeUIType uiType, Narrative nar, bool fadingIn)
+    IEnumerator BufferTime()
     {
-        yield return new WaitUntil(() =>{return fadingFinished;});
-        Fade(thisTransitioner, uiType, nar, fadingIn );
+        yield return new WaitForSeconds(2);
+        fadingFinished = true;
+        StopCoroutine("BufferTime");
     }
-
     private void DoneFading()
     {
-        fadingFinished = true;
-        StopCoroutine("WaitingForFinish");
+        StartCoroutine(BufferTime());
     }
 }
 

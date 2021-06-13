@@ -26,6 +26,7 @@ public class fadeUIItemsCtrl : MonoBehaviour
         List<fadUIItems> matchingItemsOfType = itemsOfThisCtrl.FindAll( fi => fi.GetType() == whatType);
 
         fadingIn = ctrlfadingIn;
+        whenFinished = callbackOnFinished;
 
         if(matchingItemsOfType.Count != 0 )
         {
@@ -37,11 +38,13 @@ public class fadeUIItemsCtrl : MonoBehaviour
     IEnumerator FadeTheMatchingItems(List<fadUIItems> uiItems)
     {
         int numberOfItemsFaded = 0;
+        int triggeredFades = 0;
         GameEvents.fadeUIType currentType = uiItems[0].GetType();
         do
         {
             fadUIItems currentFader = uiItems[numberOfItemsFaded];
             currentFader.SetMode(fadingIn);
+            currentFader.SetCallback(() =>{ numberOfItemsFaded++;});
 
             if(currentType == GameEvents.fadeUIType.BG)
             {
@@ -53,10 +56,13 @@ public class fadeUIItemsCtrl : MonoBehaviour
             }
             
             yield return new WaitForSeconds(waitTimeBetweenChainCalls);
-            numberOfItemsFaded++;
+            triggeredFades++;
             
-        } while (numberOfItemsFaded < uiItems.Count);
-        if(whenFinished != null) whenFinished();
+        } while (triggeredFades < uiItems.Count);
+
+        yield return new WaitUntil(() => { return numberOfItemsFaded == uiItems.Count;});
+        whenFinished();
+
     }
 
     

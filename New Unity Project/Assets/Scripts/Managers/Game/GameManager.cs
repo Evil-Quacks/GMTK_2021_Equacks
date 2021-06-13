@@ -96,23 +96,40 @@ public class GameManager : MonoSingleton<GameManager>
     IEnumerator WaitToFadeOutToScene()
     {
         //Fade In Quote & Author
-        transitioner.Fade(WhichTransitioner.OPEN, GameEvents.fadeUIType.TXT,null,false);
-
+        transitioner.fadingFinished = false;
+        transitioner.Fade(WhichTransitioner.OPEN, GameEvents.fadeUIType.TXT,null,true);
+        
         yield return new WaitUntil(() => {return transitioner.fadingFinished;});
 
         //Wait a bit with the quote on screen
-        yield return new WaitForSeconds(4);
+        yield return new WaitForSeconds(5);
 
         //Fade Out Text
+        transitioner.fadingFinished = false;
         transitioner.Fade(WhichTransitioner.OPEN, GameEvents.fadeUIType.TXT, null, false);
+        
 
         yield return new WaitUntil(() => {return transitioner.fadingFinished;});
 
         //Fade Out Black BG
+        transitioner.fadingFinished = false;
         transitioner.Fade(WhichTransitioner.OPEN, GameEvents.fadeUIType.BG, null, false);
+        
+
         yield return new WaitUntil(() => {return transitioner.fadingFinished;});
 
         StopCoroutine("WaitToFadeOutToScene");
+    }
+
+    IEnumerator WaitForQuote(string thenLoadThisScene)
+    {
+        yield return new WaitUntil(() => {return transitioner.fadingFinished;});
+        if(thenLoadThisScene != "")
+        {
+            EventManager.instance.QueueEvent(new SceneEvents.LoadNextScene("Game"));
+        }
+
+        StopCoroutine("WaitForQuote");
     }
     private void OnSpawnFound(EnvioEvents.SpawnerCreated @event)
     {
@@ -170,8 +187,11 @@ public class GameManager : MonoSingleton<GameManager>
     private void OnStartGame(GameEvents.StartGame st)
     {
         //Fade in black BG
-        transitioner.Fade(WhichTransitioner.START, GameEvents.fadeUIType.BG, null, true);
-        //Load Scene In BG
-        EventManager.instance.QueueEvent(new SceneEvents.LoadNextScene("Game"));
+        transitioner.fadingFinished = false;
+        transitioner.Fade(WhichTransitioner.OPEN, GameEvents.fadeUIType.BG, null, true);
+        
+        StartCoroutine(WaitForQuote("Game"));
+
+
     }
 }

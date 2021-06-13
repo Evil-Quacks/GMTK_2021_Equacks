@@ -61,6 +61,12 @@ public class fadUIItems : MonoBehaviour
     {
         fadingText = true;
         float newAlpha;
+        if((fadingIn && text.color.a >= 1) || (!fadingIn && text.color.a <= 0))
+        {
+            fadingText = false;
+            if(currentCallback != null) currentCallback();
+            currentCallback = null;
+        }
         if(fadingIn)
         {
             newAlpha = AdjustAlpha(text.color,false);
@@ -72,19 +78,18 @@ public class fadUIItems : MonoBehaviour
             text.color = new Color(text.color.r, text.color.g, text.color.b, newAlpha);
         }
 
-        if(newAlpha<= 0 || newAlpha >= 1)
-        {
-            fadingText = false;
-            if(currentCallback != null) currentCallback();
-            currentCallback = null;
-        }
-
     }
 
     public void FadeBG()
     {
         fadingBG = true;
         float newAlpha;
+        if((fadingIn && img.color.a >= 1) || (!fadingIn && img.color.a <= 0))
+        {
+            fadingBG = false;
+            if(currentCallback != null) currentCallback();
+            currentCallback = null;
+        }
         if(!fadingIn)
         {
             newAlpha = AdjustAlpha(img.color,true);
@@ -96,12 +101,7 @@ public class fadUIItems : MonoBehaviour
             img.color = new Color(img.color.r, img.color.g, img.color.b, newAlpha);
         }
 
-        if(newAlpha<= 0 || newAlpha >= 1)
-        {
-            fadingBG = false;
-            if(currentCallback != null) currentCallback();
-            currentCallback = null;
-        }
+        
     }
 
     private float AdjustAlpha(Color startingColor, bool fadeOut)
