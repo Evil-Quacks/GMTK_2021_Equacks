@@ -1,7 +1,7 @@
 /*
  Handles Cross Script communication through events. Personalized Event subscribing and creating.
  
- Written By: Alex Hollander
+ Written By: Alex Hollander (Old Coworker)
  Editted By: Amanda D. Barbadora
  */
 using System.Collections.Generic;

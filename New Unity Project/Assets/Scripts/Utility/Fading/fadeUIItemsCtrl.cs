@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,29 +14,19 @@ public class fadeUIItemsCtrl : MonoBehaviour
 
     bool fadingIn;
 
-    private void Awake() {
-        Subscribe();
+    Action whenFinished;
+
+    public void SetPhase(string messageToDisplay)
+    {
+        currentMessage = messageToDisplay;
     }
 
-    void Subscribe()
+    public void Fade(bool ctrlfadingIn, GameEvents.fadeUIType whatType, Action callbackOnFinished)
     {
-        if(EventManager.instance != null)
-        {
-            EventManager.instance.AddListener<GameEvents.SetCurrentMessage>(OnSetPhase);
-            EventManager.instance.AddListener<GameEvents.FadeUI>(OnFade);
-        }
-    }
+        List<fadUIItems> matchingItemsOfType = itemsOfThisCtrl.FindAll( fi => fi.GetType() == whatType);
 
-    void OnSetPhase(GameEvents.SetCurrentMessage @event)
-    {
-        currentMessage = @event.messageToDisplay;
-    }
-
-    void OnFade(GameEvents.FadeUI @event)
-    {
-        List<fadUIItems> matchingItemsOfType = itemsOfThisCtrl.FindAll( fi => fi.GetType() == @event.whatToFade);
-
-        fadingIn = @event.fadingIn;
+        fadingIn = ctrlfadingIn;
+        whenFinished = callbackOnFinished;
 
         if(matchingItemsOfType.Count != 0 )
         {
@@ -47,11 +38,13 @@ public class fadeUIItemsCtrl : MonoBehaviour
     IEnumerator FadeTheMatchingItems(List<fadUIItems> uiItems)
     {
         int numberOfItemsFaded = 0;
+        int triggeredFades = 0;
         GameEvents.fadeUIType currentType = uiItems[0].GetType();
         do
         {
             fadUIItems currentFader = uiItems[numberOfItemsFaded];
             currentFader.SetMode(fadingIn);
+            currentFader.SetCallback(() =>{ numberOfItemsFaded++;});
 
             if(currentType == GameEvents.fadeUIType.BG)
             {
@@ -63,22 +56,14 @@ public class fadeUIItemsCtrl : MonoBehaviour
             }
             
             yield return new WaitForSeconds(waitTimeBetweenChainCalls);
-            numberOfItemsFaded++;
+            triggeredFades++;
             
-        } while (numberOfItemsFaded < uiItems.Count);
+        } while (triggeredFades < uiItems.Count);
+
+        yield return new WaitUntil(() => { return numberOfItemsFaded == uiItems.Count;});
+        whenFinished();
+
     }
 
-    [ContextMenu("Test Fade In Text")]
-    public void TEST_FADEIN()
-    {
-        GameEvents.FadeUI mockEvent = new GameEvents.FadeUI(true, GameEvents.fadeUIType.TXT);
-        OnFade(mockEvent);
-    }
-
-    [ContextMenu("Test Fade Out Text")]
-    public void TEST_FADEIOUT()
-    {
-        GameEvents.FadeUI mockEvent = new GameEvents.FadeUI(false, GameEvents.fadeUIType.TXT);
-        OnFade(mockEvent);
-    }
+    
 }

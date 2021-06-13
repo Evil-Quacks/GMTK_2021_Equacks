@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using MemoryEvents;
 using UnityEngine;
 using Utilities.Logger;
@@ -27,6 +29,9 @@ public class MemoryView : MonoBehaviour
     public float timeToHoldInteractToLock;
     //!-------------------------
 
+    IEnumerator timer;
+    bool timerRunning;
+
     public void Initialize(Memory memory, AudioClip sfx, float sfxVol, float fadeSpeed)
     {
         memoryToSpawn = memory;
@@ -38,6 +43,7 @@ public class MemoryView : MonoBehaviour
     private void Start()
     {
         Log.Message("MV", "CREATED");
+        timerRunning = false;
         EventManager.instance.AddListener<SpawnMemory>(OnSpawnMemory);
     }
 
@@ -45,24 +51,31 @@ public class MemoryView : MonoBehaviour
     {
         if (playerInRange && !memoryToSpawn.levelOne)
         {
-            if (Input.GetKeyUp("e") || timePressed > timeToHoldInteractToLock)
+            if (Input.GetKeyDown("e"))
             {
-
+                timer = RunTimer();
+                StartCoroutine(timer);
+            }
+            else if ((Input.GetKeyUp("e") && timerRunning) || timePressed > timeToHoldInteractToLock)
+            {
+                StopTimer();
                 if (timePressed >= timeToHoldInteractToLock)
                 {
+                    Log.Message(message: "long e press - this memory was selected");
                     SelectThisMemory();
                 }
                 else
                 {
+                    Log.Message(message: "short e press - this memory's note was played");
                     PlayNote();
                     RemoveOneAttempt();
                 }
                 ResetPressTime();
             }
-            else if (Input.GetKey("e"))
-            {
-                timePressed += Time.deltaTime;
-            }
+            // else if (Input.GetKey("e"))
+            // {
+            //     timePressed += Time.deltaTime;
+            // }
         }
         else if (memoryToSpawn.levelOne)
         {
@@ -72,8 +85,8 @@ public class MemoryView : MonoBehaviour
                 PlayNote();
             }
         }
-
     }
+
     private void FixedUpdate()
     {
         if (fadeSprite)
@@ -83,10 +96,32 @@ public class MemoryView : MonoBehaviour
 
     }
 
+    IEnumerator RunTimer()
+    {
+        Log.Message(message: "Starting timer");
+        timerRunning = true;
+
+        while (timerRunning)
+        {
+            timePressed += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+
+        yield return null;
+    }
+
+    void StopTimer()
+    {
+        Log.Message(message: "Stopping timer");
+        timerRunning = false;
+        // StopCoroutine(timer);
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.tag == "Player")
         {
+            Log.Message("Memory", "Player's in range! :3");
             playerInRange = true;
         }
     }
@@ -95,6 +130,7 @@ public class MemoryView : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
+            Log.Message("Memory", "Player's left range.. :(");
             playerInRange = false;
             ResetPressTime();
         }
@@ -102,7 +138,9 @@ public class MemoryView : MonoBehaviour
 
     private void ResetPressTime()
     {
+        Log.Value($"in MemoryView.ResetPressTime()\ntimePressed: {timePressed}");
         timePressed = 0;
+        Log.Value($"in MemoryView.ResetPressTime()\ntimePressed: {timePressed}");
     }
 
     private void SelectThisMemory()
@@ -138,7 +176,7 @@ public class MemoryView : MonoBehaviour
     {
         Debug.Log("PLAY NOTE :D");
         //Play the audio file from the audio source.
-        if (!audio_mem.isPlaying)
+        if (audio_mem != null && !audio_mem.isPlaying)
         {
             // audio_mem.PlayOneShot(sfx_mem, sfxVolume);
         }
@@ -160,12 +198,28 @@ public class MemoryView : MonoBehaviour
 
     private void AdjustAlpha()
     {
-        Color currentColor = spr_mem.color;
-        float newAlpha = currentColor.a - (Mathf.Exp(fadeSpeed) * Time.deltaTime);
-        spr_mem.color = new Color(currentColor.r, currentColor.g, currentColor.b, newAlpha);
-        if (newAlpha <= 0.3f)
+        try
         {
-            fadeSprite = false;
+            Log.Message(message: "AdjustAlpha is adjusting the alpha in MemoryView");
+            Color currentColor = spr_mem.color;
+            float newAlpha = currentColor.a - (Mathf.Exp(fadeSpeed) * Time.deltaTime);
+            spr_mem.color = new Color(currentColor.r, currentColor.g, currentColor.b, newAlpha);
+            if (newAlpha <= 0.3f)
+            {
+                fadeSprite = false;
+                EventManager.instance.QueueEvent(new DespawnMemory(this));
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"in MemoryView at AdjustAlpha with {ex}");
+            Log.Message(message: "Set the alpha to 0f so this doesn't run ad infinitum");
+            float newAlpha = 0f;
+
+            if (newAlpha <= 0.3f)
+            {
+                fadeSprite = false;
+            }
         }
     }
 

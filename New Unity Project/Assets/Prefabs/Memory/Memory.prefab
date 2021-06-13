@@ -175,6 +175,7 @@ GameObject:
   - component: {fileID: 2625918448285704086}
   - component: {fileID: -1829607019635035536}
   - component: {fileID: 5721007935818434742}
+  - component: {fileID: 8144500053773073091}
   m_Layer: 0
   m_Name: Memory
   m_TagString: Untagged
@@ -264,7 +265,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audio_mem: {fileID: 0}
-  spr_mem: {fileID: 0}
+  spr_mem: {fileID: -1829607019635035536}
   col_mem: {fileID: 0}
   memoryToSpawn:
     memorySFX: {fileID: 0}
@@ -273,7 +274,23 @@ MonoBehaviour:
     levelOne: 0
   sfxVolume: 0
   fadeSpeed: 0
-  timeToHoldInteractToLock: 0
+  timeToHoldInteractToLock: 3
+--- !u!70 &8144500053773073091
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4940294090586607882}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.010806129, y: 0.44726706}
+  m_Size: {x: 1.9913491, y: 2.9168587}
+  m_Direction: 0
 --- !u!1 &5247263466160255465
 GameObject:
   m_ObjectHideFlags: 0

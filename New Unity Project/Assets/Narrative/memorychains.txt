@@ -10,7 +10,7 @@ The roots used to connect. - 4
 
 Everything had a place. - 4
 
-Then everything shattered... - 5
+Then it all shattered... - 5
 
 The ground up heaved. - 5
 
@@ -43,40 +43,3 @@ Until it is beautiful once again...
 
 > pan up to a lush beautiful garden & the blob <
 
-
------------------------------
-
-> Do you remember when we went camping?
-n : Sea side waves crashing
-y : Bird whistling
-n : Fireworks
-
------------------------------
-
-> A few days in it stormed so bad we had to move our camp from the rising water.
-n : Water Swirling
-n : Sea side waves crashing
-n : cracking crunch branch
-y : Thunder Very Close
-
------------------------------
-
-> but our tent got swept away and we were left soaking wet and running for shelter.
-I found an shed we could use but you were convinced it was haunted!
-n : Door Church
-n : Rain Moderate
-n : Bird whistling
-y : Door squeaking
-
---------------------------------
-
-> but we survived until morning and went home on the first train.
-n : Bird whistling
-n : Rain Moderate
-n : stream water
-n : Fireworks
-y : Train Passing Right
-
---------------------------------
-
-> 
