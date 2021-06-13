@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEditor.Animations;
+// using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody2D))]
-[RequireComponent(typeof(AnimatorController))]
+[RequireComponent(typeof(RuntimeAnimatorController))]
 public class PlayerView : MonoBehaviour
 {
     [SerializeField]
@@ -58,7 +58,7 @@ public class PlayerView : MonoBehaviour
             // Debug.Log("FALLING");
         }
 
-        if(playerRB.velocity.y < Vector2.zero.y)
+        if (playerRB.velocity.y < Vector2.zero.y)
         {
             playerAnimCtrl.SetBool("fall", true);
         }
@@ -71,16 +71,16 @@ public class PlayerView : MonoBehaviour
             if ((Input.GetKey("right") || Input.GetKey("d")) && playerVelocity.x <= maxMoveVelocity)
             {
                 // To the right...
-                blobbySpriteRen.flipX=false;
-                if(!isJumping) playerAnimCtrl.SetBool("blobby_Moving", true);
+                blobbySpriteRen.flipX = false;
+                if (!isJumping) playerAnimCtrl.SetBool("blobby_Moving", true);
                 direction = Vector2.right;
                 playerRB.AddForce(direction * moveForce);
             }
             else if ((Input.GetKey("left") || Input.GetKey("a")) && playerVelocity.x >= (maxMoveVelocity * -1))
             {
                 // To the left ...
-                blobbySpriteRen.flipX=true;
-                if(!isJumping) playerAnimCtrl.SetBool("blobby_Moving", true);
+                blobbySpriteRen.flipX = true;
+                if (!isJumping) playerAnimCtrl.SetBool("blobby_Moving", true);
                 direction = Vector2.left;
                 playerRB.AddForce(direction * moveForce);
             }
