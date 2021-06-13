@@ -14,9 +14,17 @@ public class MemoryController
         this.memoryPrefab = prefab;
         this.memoryModel = model;
 
-        // Subscribe();
+        Subscribe();
         Log.Created("MC");
         InitializeMemory(memorySpawn);
+    }
+
+    void Subscribe()
+    {
+        if (EventManager.instance != null)
+        {
+            EventManager.instance.AddListener<DespawnMemory>(OnDespawnMemory);
+        }
     }
 
     void InitializeMemory(Transform memorySpawn)
@@ -26,6 +34,15 @@ public class MemoryController
             memory = GameObject.Instantiate(memoryPrefab, memorySpawn);
             // EventManager.instance.QueueEvent(new);
             memory.Initialize(memoryModel, null, 0f, 0.5f);
+        }
+    }
+
+    void OnDespawnMemory(DespawnMemory @event)
+    {
+        if (memory.Equals(@event.memory))
+        {
+            Log.Message("MemoryController", $"Despawning this memory: {@event.memory}");
+            memory.gameObject.SetActive(false);
         }
     }
 }

@@ -11,4 +11,14 @@ namespace MemoryEvents
             memoryTransform = memoryTransformReference;
         }
     }
+
+    public struct DespawnMemory : iEvent
+    {
+        public readonly MemoryView memory;
+
+        public DespawnMemory(MemoryView memory)
+        {
+            this.memory = memory;
+        }
+    }
 }
