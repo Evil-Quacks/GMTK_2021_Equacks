@@ -183,6 +183,15 @@ public class GameManager : MonoSingleton<GameManager>
 
         StopCoroutine("WaitForQuote");
     }
+    
+    IEnumerator WaitForReadText(WhichTransitioner transToUse)
+    {
+        yield return new WaitForSeconds(5);
+        transitioner.Fade(transToUse, GameEvents.fadeUIType.BG, null, false);
+        transitioner.Fade(transToUse, GameEvents.fadeUIType.TXT, null, false);
+        yield return new WaitUntil(() => { return transitioner.fadingFinished;});
+        EventManager.instance.QueueEvent(new GameEvents.PlayerCanMove(true));
+    }
     private void OnSpawnFound(EnvioEvents.SpawnerCreated @event)
     {
         PlayerController pCtrl = new PlayerController(playerPrefab, playerStats, @event.spawnerLoc);
@@ -223,6 +232,7 @@ public class GameManager : MonoSingleton<GameManager>
         }
 
         Narrative currentNarr;
+        WhichTransitioner currentTrans;
         //3 pity tries
         if(playerStats.currentHealth >= narrativeIndex - 3)
         {
@@ -238,6 +248,7 @@ public class GameManager : MonoSingleton<GameManager>
             }
             transitioner.Fade(WhichTransitioner.GOOD, GameEvents.fadeUIType.BG, currentNarr, true);
             transitioner.Fade(WhichTransitioner.GOOD, GameEvents.fadeUIType.TXT, currentNarr, true);
+            currentTrans = WhichTransitioner.GOOD;
             
         }
         else
@@ -254,11 +265,14 @@ public class GameManager : MonoSingleton<GameManager>
 
             transitioner.Fade(WhichTransitioner.BAD, GameEvents.fadeUIType.BG, currentNarr, true);
             transitioner.Fade(WhichTransitioner.BAD, GameEvents.fadeUIType.TXT, currentNarr, true);
+            currentTrans = WhichTransitioner.BAD;
         }
 
         //Set Up all the memories & then call the same but reverse, txt first than bg.
         EventManager.instance.QueueEvent(new GameEvents.PlayerCanMove(false));
         memoryStages[narrativeIndex].SetActive(true);
+        StartCoroutine(WaitForReadText(currentTrans));
+
 
     }
 

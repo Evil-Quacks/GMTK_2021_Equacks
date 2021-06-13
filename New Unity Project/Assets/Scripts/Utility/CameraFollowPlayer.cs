@@ -23,7 +23,7 @@ public class CameraFollowPlayer : MonoBehaviour
                 sleeping = false;
             });
             EventManager.instance.AddListener<GameEvents.PlayerCanMove>( (mov) =>{
-                if(!mov)
+                if(!mov.canTheyMove)
                 {
                     sleeping = true;
                 }
