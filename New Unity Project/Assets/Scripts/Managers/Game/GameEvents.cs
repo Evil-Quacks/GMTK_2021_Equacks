@@ -36,4 +36,14 @@ namespace GameEvents
         }
     };
 
+    public struct SendMemoryGOs:iEvent
+    {
+        public List<GameObject> memoryGroups;
+
+        public SendMemoryGOs(List<GameObject> memG)
+        {
+            memoryGroups = memG;
+        }
+    }
+
 }

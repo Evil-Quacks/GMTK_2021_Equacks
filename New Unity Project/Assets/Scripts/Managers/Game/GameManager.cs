@@ -47,6 +47,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     bool musicFade = false;
 
+    [SerializeField]
     List<GameObject> memoryStages = new List<GameObject>();
     
     #endregion
@@ -73,6 +74,9 @@ public class GameManager : MonoSingleton<GameManager>
             EventManager.instance.AddListener<GameEvents.MemorySelected>(OnMemory);
             EventManager.instance.AddListener<SceneEvents.LoadedSceneRequested>(OnRequestedSceneLoaded);
             EventManager.instance.AddListener<GameEvents.StartGame>(OnStartGame);
+            EventManager.instance.AddListener<GameEvents.SendMemoryGOs>( ( e) => {
+                memoryStages = new List<GameObject>(e.memoryGroups);
+            });
         }
 
         EventManager.instance.QueueEvent(new SceneEvents.LoadedSceneRequested("StartMenu"));
