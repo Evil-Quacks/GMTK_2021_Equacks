@@ -1,6 +1,7 @@
 ﻿#define DEBUG
 
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoSingleton<GameManager>
@@ -30,6 +31,14 @@ public class GameManager : MonoSingleton<GameManager>
     // AudioClip musicClip;
 
     Vector2 initialSpawnLocation;
+
+    [Header("Transitioners")]
+    [SerializeField]
+    TransitionCtrl transitioner;
+
+    [SerializeField]
+    List<Narrative> narrativeBits;
+    
     #endregion
 
     #region StartUp
