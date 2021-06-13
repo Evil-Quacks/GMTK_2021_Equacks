@@ -49,6 +49,8 @@ public class GameManager : MonoSingleton<GameManager>
     int narrativeIndex = 0;
 
     bool musicFade = false;
+
+    List<GameObject> memoryStages = new List<GameObject>();
     
     #endregion
 
@@ -210,26 +212,51 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void OnMemory(GameEvents.MemorySelected ms)
     {
+        memoryStages[narrativeIndex].SetActive(false);
         narrativeIndex++;
+
         if (ms.wasPlayerCorrect)
         {
             playerStats.currentHealth += 1;
         }
 
+        Narrative currentNarr;
         //3 pity tries
         if(playerStats.currentHealth >= narrativeIndex - 3)
         {
             //Doing great didn't miss any
-            transitioner.Fade(WhichTransitioner.GOOD, GameEvents.fadeUIType.BG, narrativeBits[narrativeIndex], true);
-            transitioner.Fade(WhichTransitioner.GOOD, GameEvents.fadeUIType.TXT, narrativeBits[narrativeIndex], true);
+            if(narrativeIndex >= 6)
+            {
+                //They diverge
+                currentNarr = narrativeBits.Find( n => {return n.moralType == NarrativeType.GOOD && n.orderInStory == narrativeIndex;});
+            }
+            else
+            {
+                currentNarr = narrativeBits[narrativeIndex];
+            }
+            transitioner.Fade(WhichTransitioner.GOOD, GameEvents.fadeUIType.BG, currentNarr, true);
+            transitioner.Fade(WhichTransitioner.GOOD, GameEvents.fadeUIType.TXT, currentNarr, true);
+            
         }
         else
         {
-            transitioner.Fade(WhichTransitioner.BAD, GameEvents.fadeUIType.BG, narrativeBits[narrativeIndex], true);
-            transitioner.Fade(WhichTransitioner.BAD, GameEvents.fadeUIType.TXT, narrativeBits[narrativeIndex], true);
+            if(narrativeIndex >= 6)
+            {
+                //They diverge
+                currentNarr = narrativeBits.Find( n => {return n.moralType == NarrativeType.BAD && n.orderInStory == narrativeIndex;});
+            }
+            else
+            {
+                currentNarr = narrativeBits[narrativeIndex];
+            }
+
+            transitioner.Fade(WhichTransitioner.BAD, GameEvents.fadeUIType.BG, currentNarr, true);
+            transitioner.Fade(WhichTransitioner.BAD, GameEvents.fadeUIType.TXT, currentNarr, true);
         }
 
         //Set Up all the memories & then call the same but reverse, txt first than bg.
+        memoryStages[narrativeIndex].SetActive(true);
+
     }
 
     private void OnStartGame(GameEvents.StartGame st)
