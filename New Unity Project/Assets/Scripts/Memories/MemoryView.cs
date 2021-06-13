@@ -150,7 +150,7 @@ public class MemoryView : MonoBehaviour
     private void SelectThisMemory()
     {
         Debug.Log("SELECT THIS ONE");
-        //EventManager.instance.QueueEvent(new GameEvents.MemorySelected(memoryToSpawn.correct));
+        EventManager.instance.QueueEvent(new GameEvents.MemorySelected(memoryToSpawn.correct));
     }
 
     private void OnSpawnMemory(SpawnMemory @event)
@@ -196,7 +196,7 @@ public class MemoryView : MonoBehaviour
             if (memoryToSpawn.attempts <= 0)
             {
                 fadeSprite = true;
-                if(memoryToSpawn.correct)
+                if (memoryToSpawn.correct)
                 {
                     //Level Over
                     EventManager.instance.QueueEvent(new GameEvents.MemorySelected(false));
@@ -230,6 +230,12 @@ public class MemoryView : MonoBehaviour
                 fadeSprite = false;
             }
         }
+    }
+
+    [ContextMenu("SelectMemory")]
+    public void SelectMemory()
+    {
+        EventManager.instance.QueueEvent(new GameEvents.MemorySelected(memoryToSpawn.correct));
     }
 
     [ContextMenu("TEST FADE")]
