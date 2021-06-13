@@ -13,12 +13,12 @@ public class TransitionCtrl : MonoBehaviour
     [SerializeField]
     fadeUIItemsCtrl badScreen;
 
-    public bool fadingFinished = false;
-    public void StartingTransition()
-    {
-        blackStartingScreen.Fade(false,GameEvents.fadeUIType.BG, null);
-    }
+    public bool fadingFinished = true;
 
+    private void Awake() {
+        fadingFinished = true;
+    }
+    
     public void Fade(WhichTransitioner transitioner, GameEvents.fadeUIType uiType, Narrative currentNar, bool fadingIn)
     {
         if(fadingFinished)

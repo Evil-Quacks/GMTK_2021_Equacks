@@ -5981,8 +5981,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4498373487a1ad34eaf364639c529092, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startButton: {fileID: 0}
-  quitButton: {fileID: 0}
+  startButton: {fileID: 1959804829}
+  quitButton: {fileID: 2100815536}
 --- !u!222 &1176853242
 CanvasRenderer:
   m_ObjectHideFlags: 0
