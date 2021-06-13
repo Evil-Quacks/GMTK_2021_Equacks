@@ -14,6 +14,7 @@ public class CameraFollowPlayer : MonoBehaviour
     public void WakeUp()
     {
         Debug.Log("CFP ==> AWAKE");
+        
         if (EventManager.instance)
         {
             EventManager.instance.AddListener<PlayerEvents.SendTransform>((e) =>
@@ -21,6 +22,17 @@ public class CameraFollowPlayer : MonoBehaviour
                 playerTransform = e.playerTransform;
                 sleeping = false;
             });
+            EventManager.instance.AddListener<GameEvents.PlayerCanMove>( (mov) =>{
+                if(!mov)
+                {
+                    sleeping = true;
+                }
+                else
+                {
+                    sleeping = false;
+                }
+            });
+
         }
     }
 

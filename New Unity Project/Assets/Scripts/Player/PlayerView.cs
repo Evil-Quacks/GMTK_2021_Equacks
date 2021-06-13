@@ -19,7 +19,7 @@ public class PlayerView : MonoBehaviour
     [SerializeField]
     SpriteRenderer blobbySpriteRen;
 
-    bool canMove = true;
+    bool canMove = false;
 
     bool isJumping = false;
 
@@ -42,6 +42,16 @@ public class PlayerView : MonoBehaviour
     {
         Debug.Log("PV ==> Created");
         EventManager.instance.AddListener<PlayerEvents.RespawnPlayer>(OnRespawnPlayer);
+        EventManager.instance.AddListener<GameEvents.PlayerCanMove>(OnPlayerMove);
+    }
+
+    private void OnPlayerMove(GameEvents.PlayerCanMove @event)
+    {
+        canMove = @event.canTheyMove;
+        if(canMove)
+        {
+            EventManager.instance.QueueEvent(new PlayerEvents.SendTransform(this.transform));
+        }
     }
 
     private void Awake()

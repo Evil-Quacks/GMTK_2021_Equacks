@@ -168,6 +168,8 @@ public class GameManager : MonoSingleton<GameManager>
         transitioner.Fade(WhichTransitioner.GOOD, GameEvents.fadeUIType.BG, narrativeBits[narrativeIndex], false);
         yield return new WaitUntil(() => {return transitioner.fadingFinished;});
 
+        EventManager.instance.QueueEvent(new GameEvents.PlayerCanMove(true));
+
         StopCoroutine("WaitToFadeOutToScene");
     }
 
@@ -255,6 +257,7 @@ public class GameManager : MonoSingleton<GameManager>
         }
 
         //Set Up all the memories & then call the same but reverse, txt first than bg.
+        EventManager.instance.QueueEvent(new GameEvents.PlayerCanMove(false));
         memoryStages[narrativeIndex].SetActive(true);
 
     }

@@ -26,4 +26,14 @@ namespace GameEvents
 
     public struct StartGame:iEvent{}
 
+    public struct PlayerCanMove:iEvent
+    {
+        public readonly bool canTheyMove;
+
+        public PlayerCanMove(bool movePlease)
+        {
+            canTheyMove = movePlease;
+        }
+    };
+
 }
