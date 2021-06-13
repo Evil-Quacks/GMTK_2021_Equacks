@@ -5,14 +5,14 @@ using UnityEngine.SceneManagement;
 
 public class EvilSceneManager : MonoSingleton<EvilSceneManager>
 {
-    private Scene currentScene;
-    private Scene oldSceneStillActive;
+    private string currentScene;
+    private string oldSceneStillActive;
 
-    private Scene mainScene;
+    private string mainScene = "main";
     public void WakeUp()
     {
         Subscribe();
-        mainScene = SceneManager.GetSceneByName("main");
+        currentScene = mainScene;
     }
 
     private void Subscribe()
@@ -33,11 +33,10 @@ public class EvilSceneManager : MonoSingleton<EvilSceneManager>
     {
         try
         {
-            Scene sceneToLoad = SceneManager.GetSceneByName(sceneName);
             SceneManager.LoadSceneAsync(sceneName,LoadSceneMode.Additive);
 
             oldSceneStillActive = currentScene;
-            currentScene = sceneToLoad;
+            currentScene = sceneName;
         }
         catch (System.Exception x)
         {
@@ -48,16 +47,21 @@ public class EvilSceneManager : MonoSingleton<EvilSceneManager>
 
     void OnSceneLoaded(Scene sceneLoaded, LoadSceneMode mod)
     {
-        if(sceneLoaded == currentScene && oldSceneStillActive != mainScene )
+        string loadedSceneName = sceneLoaded.name;
+        if(loadedSceneName == currentScene && oldSceneStillActive != mainScene )
         {
-            SceneManager.UnloadSceneAsync(oldSceneStillActive.name);
-            SceneManager.SetActiveScene(currentScene);
+            this.UnloadSceneAsync(SceneManager.GetSceneByName(oldSceneStillActive));
+            SceneManager.SetActiveScene(sceneLoaded);
         }
     }
 
+    public static AsyncOperation UnloadSceneAsync(SceneManagement.Scene sc)
+    {
+        
+    }
     void OnSceneUnload( Scene sceneUnloaded)
     {
-        if(sceneUnloaded == oldSceneStillActive)
+        if(sceneUnloaded.name == oldSceneStillActive)
         {
             oldSceneStillActive = mainScene;
         }

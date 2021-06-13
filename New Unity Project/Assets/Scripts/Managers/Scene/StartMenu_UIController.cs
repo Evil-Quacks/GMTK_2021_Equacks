@@ -11,7 +11,7 @@ public class StartMenu_UIController : MonoBehaviour
     [SerializeField]
     Button quitButton;
 
-    private void Awake() {
+    private void Start() {
         startButton.onClick.AddListener(() =>{
             EventManager.instance.QueueEvent(new GameEvents.StartGame());
         });
