@@ -3,64 +3,51 @@
 public class PlayerController
 {
     PlayerView playerPrefab;
-
     PlayerView currentPlayer;
-
     PlayerStats playerModel;
 
-    public PlayerController (PlayerView prefab, PlayerStats model, Transform spawner)
+    public PlayerController(PlayerView prefab, PlayerStats model, Transform spawner)
     {
         playerPrefab = prefab;
         playerModel = model;
 
-        Subscribe ();
-        Debug.Log (" PC ==> CREATED");
-        InitializePlayer (spawner);
+        Subscribe();
+        Debug.Log(" PC ==> CREATED");
+        InitializePlayer(spawner);
     }
 
-    void Subscribe ()
+    void Subscribe()
     {
         if (EventManager.instance != null)
         {
-            EventManager.instance.AddListener<PlayerEvents.ObsCollision> (OnCollisionWithObstacle);
-            // EventManager.instance.AddListener<PlayerEvents.ShapeShift> (OnShapeShift);
+            EventManager.instance.AddListener<PlayerEvents.ObsCollision>(OnCollisionWithObstacle);
         }
     }
 
-    void InitializePlayer (Transform playerSpawn)
+    void InitializePlayer(Transform playerSpawn)
     {
         if (playerSpawn != null && currentPlayer == null)
         {
             //Found Spawn
-            currentPlayer = GameObject.Instantiate (playerPrefab, playerSpawn.position, Quaternion.identity.normalized); //, true);
-            EventManager.instance.QueueEvent (new PlayerEvents.SendTransform (currentPlayer.transform));
-            currentPlayer.Initialize (playerModel.currentState, playerModel.currentStateCollider, playerModel.jumpSpeed, playerModel.moveSpeed, playerModel.airSpeed);
+            currentPlayer = GameObject.Instantiate(playerPrefab, playerSpawn, true);
+            EventManager.instance.QueueEvent(new PlayerEvents.SendTransform(currentPlayer.transform));
+            currentPlayer.Initialize(playerModel.jumpImpulseForce, playerModel.moveForce, playerModel.maxMoveVelocity, playerModel.airForce);
         }
     }
 
-    // void OnShapeShift (PlayerEvents.ShapeShift @event)
-    // {
-    //     int shape = (int) @event.setState;
-    //     PStateCollider newStateCollider = (PStateCollider) shape;
-
-    //     playerModel.currentState = @event.setState;
-    //     playerModel.currentStateCollider = newStateCollider;
-    //     currentPlayer.ShapeShift (@event.setState, newStateCollider);
-    // }
-
-    void OnCollisionWithObstacle (PlayerEvents.ObsCollision @event)
+    void OnCollisionWithObstacle(PlayerEvents.ObsCollision @event)
     {
         //Get Obstacle Class
-        Obstacle collidedObs = @event.obstacle.GetComponent<Obstacle> ();
+        Obstacle collidedObs = @event.obstacle.GetComponent<Obstacle>();
         if (collidedObs)
         {
-            if (playerModel.currentState == collidedObs.requiredState)
+            if (collidedObs.isWinObj)
             {
-                @event.isCorrectState (true);
+                @event.isCorrectState(true);
             }
             else
             {
-                @event.isCorrectState (false);
+                @event.isCorrectState(false);
             }
         }
     }
