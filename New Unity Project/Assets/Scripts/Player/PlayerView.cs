@@ -44,7 +44,6 @@ public class PlayerView : MonoBehaviour
 
     private void FixedUpdate()
     {
-
         //Check if falling
         if (Physics2D.Raycast(this.transform.position, Vector2.down, 1f).collider)
         {
