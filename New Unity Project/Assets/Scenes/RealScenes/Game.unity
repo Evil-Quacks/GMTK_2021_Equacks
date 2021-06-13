@@ -1607,7 +1607,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c56d20f322287a6468b2a06d0cbef737, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  memoryGroups: []
+  memoryGroups:
+  - {fileID: 1821497811}
+  - {fileID: 386935985}
+  - {fileID: 643294443}
+  - {fileID: 1593213006}
+  - {fileID: 1396894758}
+  - {fileID: 1196476920}
+  - {fileID: 1042373509}
 --- !u!4 &232767037
 Transform:
   m_ObjectHideFlags: 0
@@ -30369,7 +30376,8 @@ MonoBehaviour:
   follower: {fileID: 0}
   cameraFollowOffset: {x: 0, y: 0}
   musicVolume: 0.5
-  initialSpawnLocation: {x: 0, y: 0}
+  BGMSpeaker: {fileID: 0}
+  bgmLibrary: []
   transitioner: {fileID: 0}
   narrativeBits: []
   memoryStages: []

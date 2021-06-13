@@ -67,11 +67,11 @@ public class GameManager : MonoSingleton<GameManager>
      private void FixedUpdate() {
         if(musicFade)
         {
-            if(BGMSpeaker.volume < 1)
+            if(BGMSpeaker.volume < musicVolume )
             {
                 //Fade In
                 BGMSpeaker.volume += .25f;
-                if(BGMSpeaker.volume >= 1) musicFade = false;
+                if(BGMSpeaker.volume >= musicVolume) musicFade = false;
             }
             else
             {
@@ -95,7 +95,8 @@ public class GameManager : MonoSingleton<GameManager>
             EventManager.instance.AddListener<SceneEvents.LoadedSceneRequested>(OnRequestedSceneLoaded);
             EventManager.instance.AddListener<GameEvents.StartGame>(OnStartGame);
             EventManager.instance.AddListener<GameEvents.SendMemoryGOs>( ( e) => {
-                memoryStages = new List<GameObject>(e.memoryGroups);
+                memoryStages = e.memoryGroups;
+                memoryStages[0].SetActive(true);
             });
         }
 
