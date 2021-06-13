@@ -1,5 +1,4 @@
-﻿#define DEBUG
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEditor.Animations;
 using UnityEngine;
@@ -11,10 +10,6 @@ public class PlayerView : MonoBehaviour
 {
     [SerializeField]
     Rigidbody2D playerRB;
-
-#if DEBUG
-    Text velocityText;
-#endif
 
     Dictionary<string, GameObject> playerStateColliders = new Dictionary<string, GameObject>();
 
@@ -38,9 +33,6 @@ public class PlayerView : MonoBehaviour
 
     private void Start()
     {
-#if DEBUG
-        velocityText = velocityText = GameObject.Find("VELOCITY_TEXT").GetComponent<Text>();
-#endif
         Debug.Log("PV ==> Created");
         EventManager.instance.AddListener<PlayerEvents.RespawnPlayer>(OnRespawnPlayer);
     }
@@ -52,9 +44,6 @@ public class PlayerView : MonoBehaviour
 
     private void FixedUpdate()
     {
-#if DEBUG
-        velocityText.text = $"Velocity: ({playerRB.velocity.x}, {playerRB.velocity.y})";
-#endif
         //Check if falling
         if (Physics2D.Raycast(this.transform.position, Vector2.down, 1f).collider)
         {
